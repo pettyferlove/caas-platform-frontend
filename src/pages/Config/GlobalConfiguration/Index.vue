@@ -10,29 +10,6 @@
           :loading="initLoading"
         >
           <v-form ref="form">
-            <!--            <v-text-field
-              :rules="[(v) => !!v || '请填写Gitlab地址']"
-              label="Gitlab地址"
-              required
-              v-model="formData.gitlabHomePath"
-            ></v-text-field>
-
-            <v-text-field
-              :rules="[(v) => !!v || '请填写Gitlab Api Token']"
-              label="Gitlab Api Token"
-              required
-              type="password"
-              v-model="formData.gitlabApiToken"
-            ></v-text-field>-->
-
-            <v-text-field
-              label="Docker Host"
-              v-model="formData.dockerHost"
-            ></v-text-field>
-            <v-text-field
-              label="WorkSpace"
-              v-model="formData.workspace"
-            ></v-text-field>
             <v-text-field
               label="Docker Registry Path"
               v-model="formData.dockerRegistryPath"
@@ -53,11 +30,6 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-
-            <v-text-field
-              label="Maven Home"
-              v-model="formData.mavenHome"
-            ></v-text-field>
 
             <v-card-actions>
               <v-spacer></v-spacer>
