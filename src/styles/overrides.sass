@@ -1,0 +1,72 @@
+// =========================================================
+// * Vuetify Material Dashboard - v2.1.0
+// =========================================================
+//
+// * Product Page: https://www.creative-tim.com/product/vuetify-material-dashboard
+// * Copyright 2019 Creative Tim (https://www.creative-tim.com)
+//
+// * Coded by Creative Tim
+//
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+// Creative Tim refine style code
+@import vuetify-material/sidebar
+@import vuetify-material/appbar
+@import vuetify-material/buttons
+@import vuetify-material/pagination
+@import vuetify-material/footer
+@import vuetify-material/view
+@import vuetify-material/settings
+@import vuetify-material/card
+@import vuetify-material/table
+@import vuetify-material/tab
+@import vuetify-material/notification
+@import vuetify-material/modal
+@import vuetify-material/map
+@import vuetify-material/chip
+
+.v-btn.v-size--default,
+.v-btn.v-size--large
+  &:not(.v-btn--icon):not(.v-btn--fab)
+    padding: 0 30px !important
+
+.theme--light.v-list-item .v-list-item__action-text,
+.theme--light.v-list-item .v-list-item__subtitle
+  color: #999
+
+.theme--light.v-text-field>.v-input__control>.v-input__slot:before
+  border-color: #d2d2d2
+
+.v-label.v-label,
+.v-alert.v-alert
+  font-size: $font-size-root
+
+.theme--light .v-main
+  background-color: #eee
+
+.theme--light.v-data-table>.v-data-table__wrapper>table>tbody>tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper)
+  background: #fff
+
+.v-data-table table
+  padding: 4px
+  padding-bottom: 8px
+
+
+.v-data-table table th
+  text-transform: uppercase
+  white-space: nowrap
+
+.v-data-table table td
+  border-bottom: 0!important
+
+.v-data-table table tbody tr
+    transition: box-shadow .2s,transform .2s
+
+.v-data-table table tbody tr:not(.v-data-table__selected):hover
+  box-shadow: 0 3px 15px -2px rgba(0,0,0,.12)
+  transform: translateY(-4px)
+
+.v-data-table .v-data-footer
+  border-top: 0!important
