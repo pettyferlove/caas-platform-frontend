@@ -15,7 +15,7 @@
           <div>
             <div class="text-end pt-2" style="margin-bottom: 10px">
               <v-btn rounded color="primary" @click="handlerAdd"
-                ><v-icon dark>mdi-plus</v-icon></v-btn
+              ><v-icon dark>mdi-plus</v-icon></v-btn
               >
             </div>
             <v-data-table
@@ -86,14 +86,14 @@
         <v-card>
           <v-card-title class="headline"> 是否删除命名空间？ </v-card-title>
           <v-card-text
-            >该操作将会删除命名空间下所有内容，请确认是否继续</v-card-text
+          >该操作将会删除命名空间下所有内容，请确认是否继续</v-card-text
           >
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" @click="deleteTips = false">
               取消
             </v-btn>
-            <v-btn color="error darken-1" @click="deleteConfirm(selectId)">
+            <v-btn color="error darken-1" @click="deleteConfirm(deleteId)">
               同意
             </v-btn>
           </v-card-actions>
@@ -118,6 +118,7 @@ export default {
       total: 0,
       loadTimer: null,
       selectId: "",
+      deleteId: "",
       options: {
         page: 1,
         itemsPerPage: 5,
@@ -220,7 +221,7 @@ export default {
       this.dialog = true;
     },
     handlerDelete(item) {
-      this.selectId = item.id;
+      this.deleteId = item.id;
       this.deleteTips = true;
     },
     deleteConfirm(id) {
@@ -245,6 +246,7 @@ export default {
     },
     handlerClose() {
       this.selectId = "";
+      this.deleteId = "";
       this.dialog = false;
       this.loadData();
     },
