@@ -13,15 +13,42 @@
           :loading="initLoading"
         >
           <div>
-            <div class="text-end pt-2" style="margin-bottom: 10px">
+            <v-row class="text-start pt-2">
+              <v-col cols="12" sm="6" md="3">
+                <v-text-field
+                  dense
+                  v-model="queryParams.name"
+                  label="请输入名称"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="3">
+                <v-select
+                  dense
+                  v-model="queryParams.envType"
+                  :items="environmentTypes"
+                  item-text="name"
+                  item-value="value"
+                  label="请选择环境类型"
+                  outlined
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="3">
+                <v-btn @click="handlerSearch" rounded color="primary"
+                  ><v-icon dark>mdi-magnify</v-icon></v-btn
+                >
+              </v-col>
+            </v-row>
+            <div class="text-start pt-2" style="margin-bottom: 10px">
               <v-btn rounded color="primary" @click="handlerAdd"
-              ><v-icon dark>mdi-plus</v-icon></v-btn
+                ><v-icon dark>mdi-plus</v-icon></v-btn
               >
             </div>
             <v-data-table
               locale="zh_CN"
               :headers="headers"
               :items="datasets"
+              :loading="loading"
               :options.sync="options"
               :server-items-length="total"
               :footer-props="{
@@ -86,7 +113,7 @@
         <v-card>
           <v-card-title class="headline"> 是否删除命名空间？ </v-card-title>
           <v-card-text
-          >该操作将会删除命名空间下所有内容，请确认是否继续</v-card-text
+            >该操作将会删除命名空间下所有内容，请确认是否继续</v-card-text
           >
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -113,6 +140,8 @@ export default {
   data: () => {
     return {
       initLoading: false,
+      loading: false,
+      queryParams: {},
       dialog: false,
       deleteTips: false,
       total: 0,
@@ -147,6 +176,20 @@ export default {
         },
       ],
       datasets: [],
+      environmentTypes: [
+        {
+          name: "开发环境",
+          value: 1,
+        },
+        {
+          name: "测试环境",
+          value: 2,
+        },
+        {
+          name: "生产环境",
+          value: 9,
+        },
+      ],
     };
   },
   watch: {
@@ -173,6 +216,12 @@ export default {
     this.stopLoadTimer();
   },
   methods: {
+    handlerSearch() {
+      this.loading = true;
+      this.loadData().finally(() => {
+        this.loading = false;
+      });
+    },
     stopLoadTimer() {
       clearInterval(this.loadTimer);
       this.loadTimer = null;
@@ -190,6 +239,7 @@ export default {
           .page({
             currentPage: this.options.page,
             pageSize: this.options.itemsPerPage,
+            ...this.queryParams,
           })
           .then((res) => {
             this.datasets = res.data.records;

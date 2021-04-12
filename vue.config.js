@@ -115,7 +115,7 @@ module.exports = {
     }
 
     config.plugin("html").tap((args) => {
-      args[0].title = "Kubernetes云平台";
+      args[0].title = "CaaS平台";
       return args;
     });
 
