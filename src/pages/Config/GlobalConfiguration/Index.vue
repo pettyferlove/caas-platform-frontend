@@ -31,6 +31,18 @@
               </v-col>
             </v-row>
 
+            <v-textarea
+              outlined
+              auto-grow
+              v-model="formData.clusterServer"
+              name="input-7-1"
+              row-height="40"
+              label="CaaS集群地址"
+              hint="多个地址以;号分隔"
+              :rules="[(v) => !!v || '请填写CaaS集群地址']"
+              required
+            ></v-textarea>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn

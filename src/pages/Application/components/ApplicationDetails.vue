@@ -596,7 +596,7 @@ export default {
     },
     loadAutoBuildProject() {
       return new Promise((resolve, reject) => {
-        api.autoBuild
+        api.projectBuild
           .select()
           .then((res) => {
             this.autoBuilds = res.data;
