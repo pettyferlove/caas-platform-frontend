@@ -29,6 +29,12 @@
                 itemsPerPageOptions: [5, 10, 15],
               }"
             >
+              <template v-slot:item.envType="{ item }">
+                <EnvironmentType
+                  :value="item.envType"
+                  type="label"
+                ></EnvironmentType>
+              </template>
               <template v-slot:item.imagesName="{ item }">
                 {{ item.imageName + ":" + item.imageTag }}
               </template>
@@ -62,10 +68,11 @@ import { mapGetters } from "vuex";
 import MaterialCard from "@components/card/MaterialCard";
 import api from "@/api";
 import dayjs from "dayjs";
+import EnvironmentType from "@components/base/EnvironmentType";
 
 export default {
   name: "Application",
-  components: { MaterialCard },
+  components: { EnvironmentType, MaterialCard },
   data: () => {
     return {
       initLoading: false,
@@ -73,7 +80,7 @@ export default {
       loadTimer: null,
       options: {
         page: 1,
-        itemsPerPage: 5,
+        itemsPerPage: 10,
         sortBy: [],
         sortDesc: [],
         groupBy: [],
@@ -87,6 +94,11 @@ export default {
           align: "start",
           width: 250,
           value: "name",
+        },
+        {
+          text: "环境",
+          align: "center",
+          value: "envType",
         },
         { text: "容器组状态", align: "center", value: "groupStatus" },
         { text: "镜像名称", value: "imagesName" },

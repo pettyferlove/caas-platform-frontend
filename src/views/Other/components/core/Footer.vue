@@ -6,7 +6,7 @@
 
         <v-col cols="12" md="auto">
           <div class="body-1 font-weight-light pt-6 pt-md-0 text-center">
-            &copy; 2021, 广州华资
+            &copy; 2021, Pettyfer
           </div>
         </v-col>
       </v-row>

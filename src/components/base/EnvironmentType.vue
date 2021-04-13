@@ -1,6 +1,7 @@
 <template>
   <span>
     <v-select
+      :disabled="disabled"
       :dense="dense"
       :outlined="outlined"
       v-if="type === 'select'"
@@ -36,6 +37,10 @@ export default {
       default: "select",
     },
     dense: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },
