@@ -21,8 +21,8 @@ const projectBuild = {
   delete(params) {
     return Http.Delete(baseUrl + "/core/project-build/" + params);
   },
-  select() {
-    return Http.Get(baseUrl + "/core/project-build/select");
+  select(params) {
+    return Http.Get(baseUrl + "/core/project-build/select", params);
   },
   updateStatus(params) {
     return Http.Put(baseUrl + "/core/project-build/status", params);

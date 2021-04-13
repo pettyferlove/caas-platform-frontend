@@ -19,20 +19,31 @@
           :loading="initLoading"
         >
           <v-form ref="form">
-            <v-select
-              :disabled="operaType !== `add`"
-              v-model="formData.autoBuildId"
-              :items="autoBuilds"
-              :loading="autoBuildLoading"
-              item-text="projectName"
-              item-value="id"
-              @change="changeAutoBuild"
-              label="自动构建项目"
-              placeholder="使用自动构建项目来部署，简化您的部署流程"
-              :rules="[(v) => !!v || '请选择自动构建项目']"
-              prepend-icon="mdi-highway"
-              required
-            ></v-select>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-select
+                  :disabled="operaType !== `add`"
+                  v-model="formData.autoBuildId"
+                  :items="autoBuilds"
+                  :loading="autoBuildLoading"
+                  item-text="projectName"
+                  item-value="id"
+                  @change="changeAutoBuild"
+                  label="自动构建项目"
+                  placeholder="使用自动构建项目来部署，简化您的部署流程"
+                  :rules="[(v) => !!v || '请选择自动构建项目']"
+                  prepend-icon="mdi-highway"
+                  required
+                ></v-select>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <EnvironmentType
+                  @change="changeEnvType"
+                  v-model="formData.envType"
+                ></EnvironmentType>
+              </v-col>
+            </v-row>
 
             <v-text-field
               :disabled="operaType !== `add`"
@@ -388,9 +399,10 @@
 import MaterialCard from "@components/card/MaterialCard";
 import { mapGetters } from "vuex";
 import api from "@/api";
+import EnvironmentType from "@components/base/EnvironmentType";
 export default {
   name: "ApplicationDetails",
-  components: { MaterialCard },
+  components: { EnvironmentType, MaterialCard },
   props: {
     operaType: {
       type: String,
@@ -419,6 +431,7 @@ export default {
         revisionHistoryLimit: 10,
         maxSurge: 1,
         maxUnavaible: 1,
+        envType: 1,
         networks: [{}],
       },
       types: {
@@ -493,7 +506,7 @@ export default {
   },
   mounted() {
     this.autoBuildLoading = true;
-    this.loadAutoBuildProject().finally(() => {
+    this.loadProjectBuildProject().finally(() => {
       this.autoBuildLoading = false;
     });
     this.imagesDepositoryLoading = true;
@@ -594,10 +607,12 @@ export default {
           });
       });
     },
-    loadAutoBuildProject() {
+    loadProjectBuildProject() {
       return new Promise((resolve, reject) => {
         api.projectBuild
-          .select()
+          .select({
+            envType: this.formData.envType,
+          })
           .then((res) => {
             this.autoBuilds = res.data;
             resolve();
@@ -655,6 +670,21 @@ export default {
       if (selectedRepository) {
         this.loadRepositoryTag(selectedRepository.repositoryName);
       }
+    },
+    changeEnvType(value) {
+      this.loadProjectBuildProject().finally(() => {
+        this.autoBuildLoading = false;
+      });
+      this.formData = {
+        instancesNumber: 1,
+        imagePullStrategy: "Always",
+        strategyType: "RollingUpdate",
+        revisionHistoryLimit: 10,
+        maxSurge: 1,
+        maxUnavaible: 1,
+        envType: value,
+        networks: [{}],
+      };
     },
     submit() {
       if (this.$refs.form.validate()) {

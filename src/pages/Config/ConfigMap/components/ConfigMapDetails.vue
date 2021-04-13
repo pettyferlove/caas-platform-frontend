@@ -122,6 +122,7 @@ export default {
       submitting: false,
       formData: {
         configType: "yaml",
+        envType: 1,
       },
 
       environmentTypes: [

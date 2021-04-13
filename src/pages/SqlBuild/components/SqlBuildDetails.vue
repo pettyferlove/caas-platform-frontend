@@ -30,14 +30,7 @@
             ></v-text-field>
             <v-row>
               <v-col cols="12" md="6">
-                <v-select
-                  v-model="formData.envType"
-                  :items="environmentTypes"
-                  item-text="name"
-                  item-value="value"
-                  label="环境类型"
-                  prepend-icon="mdi-wrench"
-                ></v-select>
+                <EnvironmentType v-model="formData.envType"></EnvironmentType>
               </v-col>
             </v-row>
             <v-row>
@@ -190,10 +183,11 @@
 import MaterialCard from "@components/card/MaterialCard";
 import api from "@/api";
 import { mapGetters } from "vuex";
+import EnvironmentType from "@components/base/EnvironmentType";
 
 export default {
   name: "SqlBuildDetails",
-  components: { MaterialCard },
+  components: { EnvironmentType, MaterialCard },
   props: {
     operaType: {
       type: String,
@@ -217,20 +211,6 @@ export default {
       formData: {
         sqlTo: "HEAD",
       },
-      environmentTypes: [
-        {
-          name: "开发环境",
-          value: 1,
-        },
-        {
-          name: "测试环境",
-          value: 2,
-        },
-        {
-          name: "生产环境",
-          value: 9,
-        },
-      ],
       depositoryTypes: [
         {
           name: "Git",

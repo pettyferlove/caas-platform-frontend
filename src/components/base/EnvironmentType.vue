@@ -1,13 +1,15 @@
 <template>
   <span>
     <v-select
+      :dense="dense"
+      :outlined="outlined"
       v-if="type === 'select'"
       v-model="childValue"
       :items="environmentTypes"
       item-text="name"
       item-value="value"
-      label="环境类型"
-      prepend-icon="mdi-wrench"
+      :label="label"
+      :prepend-icon="hideIcon ? `` : `mdi-wrench`"
       @change="changeValue"
     ></v-select>
     <template v-else>
@@ -32,6 +34,22 @@ export default {
     type: {
       type: String,
       default: "select",
+    },
+    dense: {
+      type: Boolean,
+      default: false,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
+    },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
+    label: {
+      type: String,
+      default: "环境类型",
     },
   },
   watch: {

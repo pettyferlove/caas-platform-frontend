@@ -134,14 +134,7 @@
             </template>-->
             <v-row>
               <v-col cols="12" md="6">
-                <v-select
-                  v-model="formData.envType"
-                  :items="environmentTypes"
-                  item-text="name"
-                  item-value="value"
-                  label="环境类型"
-                  prepend-icon="mdi-wrench"
-                ></v-select>
+                <EnvironmentType v-model="formData.envType"></EnvironmentType>
               </v-col>
             </v-row>
 
@@ -368,10 +361,11 @@
 import api from "@/api";
 import MaterialCard from "@components/card/MaterialCard";
 import { mapGetters } from "vuex";
+import EnvironmentType from "@components/base/EnvironmentType";
 
 export default {
   name: "ProjectBuildDetails",
-  components: { MaterialCard },
+  components: { EnvironmentType, MaterialCard },
   props: {
     operaType: {
       type: String,
@@ -411,20 +405,6 @@ export default {
       projectBranchesLoading: false,
       searchProjects: null,
       searchRepository: null,
-      environmentTypes: [
-        {
-          name: "开发环境",
-          value: 1,
-        },
-        {
-          name: "测试环境",
-          value: 2,
-        },
-        {
-          name: "生产环境",
-          value: 9,
-        },
-      ],
       buildTools: [
         {
           name: "Maven",

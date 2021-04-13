@@ -24,15 +24,13 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="3">
-                <v-select
+                <EnvironmentType
+                  label="请选择环境类型"
+                  hide-icon
+                  outlined
                   dense
                   v-model="queryParams.envType"
-                  :items="environmentTypes"
-                  item-text="name"
-                  item-value="value"
-                  label="请选择环境类型"
-                  outlined
-                ></v-select>
+                ></EnvironmentType>
               </v-col>
               <v-col cols="12" sm="6" md="3">
                 <v-btn @click="handlerSearch" rounded color="primary"
@@ -83,30 +81,10 @@
               </template>
 
               <template v-slot:item.envType="{ item }">
-                <v-chip
-                  color="primary"
-                  outlined
-                  v-if="item.envType === 1"
-                  class="ma-2"
-                >
-                  开发环境
-                </v-chip>
-                <v-chip
-                  color="green"
-                  outlined
-                  v-if="item.envType === 2"
-                  class="ma-2"
-                >
-                  测试环境
-                </v-chip>
-                <v-chip
-                  color="orange"
-                  outlined
-                  v-if="item.envType === 9"
-                  class="ma-2"
-                >
-                  生产环境
-                </v-chip>
+                <EnvironmentType
+                  :value="item.envType"
+                  type="label"
+                ></EnvironmentType>
               </template>
 
               <template v-slot:item.openAutoBuild="{ item }">
@@ -247,9 +225,10 @@ import dayjs from "dayjs";
 import MaterialCard from "@components/card/MaterialCard";
 import BuildStatus from "@/pages/components/Build/BuildStatus";
 import { mapGetters } from "vuex";
+import EnvironmentType from "@components/base/EnvironmentType";
 export default {
   name: "ProjectBuildList",
-  components: { BuildStatus, MaterialCard },
+  components: { EnvironmentType, BuildStatus, MaterialCard },
   data: () => {
     return {
       deleteTips: false,
@@ -308,20 +287,6 @@ export default {
         },
       ],
       datasets: [],
-      environmentTypes: [
-        {
-          name: "开发环境",
-          value: 1,
-        },
-        {
-          name: "测试环境",
-          value: 2,
-        },
-        {
-          name: "生产环境",
-          value: 9,
-        },
-      ],
       history: [{}],
     };
   },
