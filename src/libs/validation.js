@@ -202,7 +202,7 @@ const validate = {
     callback();
   },
   key: function (rule, value, callback) {
-    if (value && !/^([a-zA-z_]{1})([\w]*)$/g.test(value)) {
+    if (value && !/^([a-z_]{1})([\w]*)$/g.test(value)) {
       return callback(new Error("只能输入英文字符和下划线"));
     }
     callback();

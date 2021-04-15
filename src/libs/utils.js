@@ -179,4 +179,15 @@ utils.toLine = (name) => {
   return name.replace(/([A-Z])/g, "_$1").toLowerCase();
 };
 
+utils.isNotNull = (object) => {
+  let keys = Object.keys(object);
+  let result = false;
+  keys.forEach((i) => {
+    if (object[i] && object[i] !== null && object[i] !== "") {
+      result = true;
+    }
+  });
+  return result;
+};
+
 export default utils;

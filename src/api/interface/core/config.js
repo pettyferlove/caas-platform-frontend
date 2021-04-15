@@ -18,5 +18,8 @@ const config = {
   delete(params) {
     return Http.Delete(baseUrl + "/core/config/" + params);
   },
+  select(namespaceId) {
+    return Http.Get(baseUrl + `/core/config/select/${namespaceId}`);
+  },
 };
 export { config };

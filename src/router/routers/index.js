@@ -69,10 +69,19 @@ export const otherRouter = {
   ],
 };
 
-/**
- * 错误路由，需要最后加载
- * @type {{path: string, component: (function(*=): any), meta: {title: string, skipAuth: boolean}, name: string}}
- */
-export const errorRouters = {};
+export const errorRouters = {
+  path: "*",
+  component: () => import("@/views/Other/Index"),
+  children: [
+    {
+      name: "404 Error",
+      path: "",
+      meta: {
+        skipAuth: true,
+      },
+      component: () => import("@/views/Other/Error"),
+    },
+  ],
+};
 
-export const routers = [mainRouter, otherRouter];
+export const routers = [mainRouter, otherRouter, errorRouters];

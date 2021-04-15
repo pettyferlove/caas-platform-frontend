@@ -14,7 +14,31 @@
           :loading="initLoading"
         >
           <div>
-            <div class="text-end pt-2" style="margin-bottom: 10px">
+            <v-row class="text-start pt-2">
+              <v-col cols="12" sm="6" md="3">
+                <v-text-field
+                  dense
+                  v-model="queryParams.name"
+                  label="请输入名称"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="3">
+                <EnvironmentType
+                  label="请选择环境类型"
+                  hide-icon
+                  outlined
+                  dense
+                  v-model="queryParams.envType"
+                ></EnvironmentType>
+              </v-col>
+              <v-col cols="12" sm="6" md="3">
+                <v-btn @click="handlerSearch" rounded color="primary"
+                  ><v-icon dark>mdi-magnify</v-icon></v-btn
+                >
+              </v-col>
+            </v-row>
+            <div class="text-start pt-2" style="margin-bottom: 10px">
               <v-btn rounded color="primary" @click="handlerAdd"
                 ><v-icon dark>mdi-plus</v-icon></v-btn
               >
@@ -23,6 +47,7 @@
               locale="zh_CN"
               :headers="headers"
               :items="datasets"
+              :loading="loading"
               :options.sync="options"
               :server-items-length="total"
               :footer-props="{
@@ -76,7 +101,9 @@ export default {
   data: () => {
     return {
       initLoading: false,
+      loading: false,
       total: 0,
+      queryParams: {},
       loadTimer: null,
       options: {
         page: 1,
@@ -164,6 +191,7 @@ export default {
             .page(this.currentNamespace.id, {
               currentPage: this.options.page,
               pageSize: this.options.itemsPerPage,
+              ...this.queryParams,
             })
             .then((res) => {
               this.datasets = res.data.records;
@@ -188,6 +216,12 @@ export default {
           namespaceId: this.currentNamespace.id,
           id: item.id,
         },
+      });
+    },
+    handlerSearch() {
+      this.loading = true;
+      this.loadData().finally(() => {
+        this.loading = false;
       });
     },
     handlerAdd() {

@@ -35,7 +35,9 @@
                 v-model="formData"
               ></ApplicationInfo>
 
-              <v-btn color="primary" @click="nextStep(1)"> 下一步 </v-btn>
+              <v-btn :loading="submitting" color="primary" @click="nextStep(1)">
+                下一步
+              </v-btn>
               <v-btn disabled color="primary"> 上一步 </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
@@ -46,6 +48,7 @@
             <v-stepper-content step="2">
               <ApplicationAdvanced
                 ref="advanced"
+                :namespace="currentNamespace"
                 class="stepper-content"
                 :opera-type="operaType"
                 v-model="formData"
@@ -107,6 +110,7 @@ import api from "@/api";
 import ApplicationInfo from "@/pages/Application/components/components/ApplicationInfo";
 import ApplicationAdvanced from "@/pages/Application/components/components/ApplicationAdvanced";
 import ApplicationNetwork from "@/pages/Application/components/components/ApplicationNetwork";
+import utils from "@/libs/utils";
 export default {
   name: "ApplicationDetails",
   components: {
@@ -130,6 +134,7 @@ export default {
       defaultData: {
         environmentVariable: "",
         localEnvironmentVariable: [{}],
+        mounts: [{}],
         instancesNumber: 1,
         imagePullStrategy: "Always",
         strategyType: "RollingUpdate",
@@ -149,7 +154,7 @@ export default {
     };
   },
   mounted() {
-    this.formData = this.defaultData;
+    this.formData = utils.deepClone(this.defaultData);
     this.id = this.$route.params.id || "";
   },
   computed: {
@@ -164,9 +169,9 @@ export default {
       }
     },
     currentNamespace() {
-      if (this.id.length !== 0 && this.currentNamespace.id) {
-        this.loadDetail();
-      }
+      this.$router.push({
+        name: "ApplicationList",
+      });
     },
   },
   methods: {
@@ -181,20 +186,25 @@ export default {
             );
           }
           if (this.formData.environmentVariable) {
-            this.formData.localEnvironmentVariable = JSON.parse(
-              this.formData.environmentVariable
+            this.$set(
+              this.formData,
+              "localEnvironmentVariable",
+              JSON.parse(this.formData.environmentVariable)
             );
           } else {
-            this.formData.localEnvironmentVariable = [{}];
+            this.$set(this.formData, "localEnvironmentVariable", [{}]);
+          }
+          if (!this.formData.mounts) {
+            this.$set(this.formData, "mounts", [{}]);
           }
           this.id = res.data.id;
         });
     },
     resetData(data) {
-      this.formData = {
+      this.formData = utils.deepClone({
         ...this.defaultData,
         ...data,
-      };
+      });
     },
     back() {
       this.$router.push({
@@ -202,76 +212,95 @@ export default {
       });
     },
     nextStep(value) {
-      if (value === 1 && this.$refs.info.validate()) {
-        this.step = 2;
-      }
-      if (value === 2 && this.$refs.advanced.validate()) {
-        this.step = 3;
-      }
-      if (value === 3 && this.$refs.network.validate()) {
-        this.submitting = true;
-        if (this.operaType === "add" && this.id === "") {
-          if (this.formData.externalIpSelect) {
-            this.formData.externalIp = this.formData.externalIpSelect.join(",");
-          }
-          if (this.formData.localEnvironmentVariable) {
-            this.formData.environmentVariable = JSON.stringify(
-              this.formData.localEnvironmentVariable
-            );
-          }
-          api.applicationDeployment
-            .create(this.currentNamespace.id, this.formData)
-            .then(() => {
-              this.$notify({
-                group: "default",
-                type: "success",
-                title: "新增成功",
-              });
-              this.$router.push({
-                name: "ApplicationList",
-              });
-            })
-            .catch((err) => {
-              this.$notify({
-                group: "default",
-                type: "error",
-                title: err.message ? err.message : "新增失败",
-              });
-            })
-            .finally(() => {
-              this.submitting = false;
-            });
+      let that = this;
+      that.submitting = true;
+      if (value === 1) {
+        if (that.$refs.info.validate()) {
+          that.step = 2;
+          that.submitting = false;
         } else {
-          if (this.formData.externalIpSelect) {
-            this.formData.externalIp = this.formData.externalIpSelect.join(",");
+          that.submitting = false;
+        }
+      }
+      if (value === 2) {
+        if (that.$refs.advanced.validate()) {
+          that.step = 3;
+          that.submitting = false;
+        } else {
+          that.submitting = false;
+        }
+      }
+      if (value === 3) {
+        if (that.$refs.network.validate()) {
+          if (that.operaType === "add" && that.id === "") {
+            if (that.formData.externalIpSelect) {
+              that.formData.externalIp = that.formData.externalIpSelect.join(
+                ","
+              );
+            }
+            if (that.formData.localEnvironmentVariable) {
+              that.formData.environmentVariable = JSON.stringify(
+                that.formData.localEnvironmentVariable
+              );
+            }
+            api.applicationDeployment
+              .create(that.currentNamespace.id, that.formData)
+              .then(() => {
+                that.$notify({
+                  group: "default",
+                  type: "success",
+                  title: "新增成功",
+                });
+                that.$router.push({
+                  name: "ApplicationList",
+                });
+              })
+              .catch((err) => {
+                that.$notify({
+                  group: "default",
+                  type: "error",
+                  title: err.message ? err.message : "新增失败",
+                });
+              })
+              .finally(() => {
+                that.submitting = false;
+              });
+          } else {
+            if (that.formData.externalIpSelect) {
+              that.formData.externalIp = that.formData.externalIpSelect.join(
+                ","
+              );
+            }
+            if (that.formData.localEnvironmentVariable) {
+              that.formData.environmentVariable = JSON.stringify(
+                that.formData.localEnvironmentVariable
+              );
+            }
+            api.applicationDeployment
+              .update(that.currentNamespace.id, that.formData)
+              .then(() => {
+                that.$notify({
+                  group: "default",
+                  type: "success",
+                  title: "更新成功",
+                });
+                that.$router.push({
+                  name: "ApplicationList",
+                });
+              })
+              .catch(() => {
+                that.$notify({
+                  group: "default",
+                  type: "error",
+                  title: "更新失败",
+                });
+              })
+              .finally(() => {
+                that.submitting = false;
+              });
           }
-          if (this.formData.localEnvironmentVariable) {
-            this.formData.environmentVariable = JSON.stringify(
-              this.formData.localEnvironmentVariable
-            );
-          }
-          api.applicationDeployment
-            .update(this.currentNamespace.id, this.formData)
-            .then(() => {
-              this.$notify({
-                group: "default",
-                type: "success",
-                title: "更新成功",
-              });
-              this.$router.push({
-                name: "ApplicationList",
-              });
-            })
-            .catch(() => {
-              this.$notify({
-                group: "default",
-                type: "error",
-                title: "更新失败",
-              });
-            })
-            .finally(() => {
-              this.submitting = false;
-            });
+        } else {
+          that.submitting = true;
         }
       }
     },

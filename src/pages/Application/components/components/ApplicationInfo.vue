@@ -155,6 +155,12 @@ export default {
           this.repositoryLoading = false;
         });
     },
+    "formData.autoBuildId"() {
+      this.projectBuildLoading = true;
+      this.loadProjectBuildProject().finally(() => {
+        this.projectBuildLoading = false;
+      });
+    },
   },
   model: {
     prop: "value",
@@ -184,7 +190,7 @@ export default {
       return new Promise((resolve, reject) => {
         api.projectBuild
           .select({
-            envType: this.formData.envType,
+            envType: this.formData.envType || 1,
           })
           .then((res) => {
             this.projectBuilds = res.data;
