@@ -18,7 +18,7 @@
     <v-list nav>
       <v-list-item two-line :class="drawer && 'px-0'">
         <v-list-item-avatar>
-          <img :src="avatarUrl" alt="avatar" />
+          <img :src="systemImageUrl" alt="avatar" />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -96,6 +96,7 @@ export default {
     return {
       imageUrl: require("./@assets/background/1.png"),
       avatarUrl: require("./@assets/avatar/1.jpg"),
+      systemImageUrl: require("./@assets/logo.png"),
       items: [
         {
           icon: "mdi-monitor-dashboard",
