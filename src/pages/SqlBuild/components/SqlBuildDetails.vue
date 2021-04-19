@@ -24,7 +24,7 @@
               placeholder="填写项目名称"
               v-model="formData.projectName"
               :counter="50"
-              :rules="[(v) => !!v || '必须填写项目名称']"
+              :rules="[(v) => validKey(v) || '必须填写项目名称']"
               prepend-icon="mdi-database-edit"
               required
             ></v-text-field>
@@ -323,6 +323,12 @@ export default {
         value: 2,
       });
       this.authTypes = authTypes;
+    },
+    validKey(val) {
+      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+        return "只能输入小写英文字符和下划线";
+      }
+      return true;
     },
   },
 };

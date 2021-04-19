@@ -7,13 +7,13 @@ const sqlBuild = {
     return Http.Get(baseUrl + "/core/sql-build/page", params);
   },
   create(params) {
-    return Http.Post(baseUrl + "/core/sql-build", params);
+    return Http.PostJSON(baseUrl + "/core/sql-build", params);
   },
   get(params) {
     return Http.Get(baseUrl + "/core/sql-build/" + params);
   },
   update(params) {
-    return Http.Put(baseUrl + "/core/sql-build", params);
+    return Http.PutJSON(baseUrl + "/core/sql-build", params);
   },
   build(params) {
     return Http.Post(baseUrl + "/core/sql-build/build/" + params);

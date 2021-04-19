@@ -18,7 +18,7 @@
     <v-list nav>
       <v-list-item two-line :class="drawer && 'px-0'">
         <v-list-item-avatar>
-          <img :src="systemImageUrl" alt="avatar" />
+          <img :src="avatarUrl" alt="avatar" />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -32,7 +32,7 @@
     </v-list>
     <v-divider class="mb-2" />
     <v-list expand nav>
-      <template v-for="item in items">
+      <template v-for="item in menu">
         <v-list-group
           v-if="item.children"
           :key="item.text"
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import menuData from "@/config/menu";
 import { mapGetters } from "vuex";
 export default {
   name: "MainNavigationDrawer",
@@ -97,61 +98,6 @@ export default {
       imageUrl: require("./@assets/background/1.png"),
       avatarUrl: require("./@assets/avatar/1.jpg"),
       systemImageUrl: require("./@assets/logo.png"),
-      items: [
-        {
-          icon: "mdi-monitor-dashboard",
-          text: "Dashboard",
-          path: "/dashboard",
-        },
-        {
-          icon: "mdi-apache-kafka",
-          text: "项目构建",
-          path: "/project-build",
-        },
-        {
-          icon: "mdi-database-clock",
-          text: "SQL构建",
-          path: "/sql-build",
-        },
-        {
-          icon: "mdi-apps",
-          text: "应用管理",
-          path: "/application",
-        },
-        {
-          icon: "mdi-file-cog",
-          text: "配置管理",
-          path: "/config",
-        },
-        {
-          icon: "mdi-semantic-web",
-          text: "服务治理",
-          path: "/service-governance",
-        },
-        {
-          icon: "mdi-diameter",
-          text: "系统资源",
-          group: "resources",
-          active: false,
-          children: [
-            {
-              icon: "mdi-hexagon-slice-4",
-              text: "命名空间",
-              path: "/resources/namespace",
-            },
-            {
-              icon: "mdi-database",
-              text: "持久卷",
-              path: "/resources/persistent-volume",
-            },
-          ],
-        },
-        {
-          icon: "mdi-cogs",
-          text: "系统配置",
-          path: "/globe-configuration",
-        },
-      ],
     };
   },
   computed: {
@@ -172,6 +118,30 @@ export default {
         title: this.$t("title"),
         subtitle: this.$t("subtitle"),
       };
+    },
+    menu() {
+      return this.loadMenu();
+    },
+  },
+  methods: {
+    loadMenu() {
+      let menu = [];
+      menuData.forEach((i) => {
+        if (this.hasRole(i.role)) {
+          if (i.children && i.children.length > 0) {
+            let children = i.children;
+            let child = [];
+            children.forEach((c) => {
+              if (this.hasRole(c.role)) {
+                child.push(c);
+              }
+            });
+            i.children = child;
+          }
+          menu.push(i);
+        }
+      });
+      return menu;
     },
   },
 };

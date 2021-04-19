@@ -285,6 +285,12 @@ export default {
         this.loadData();
       },
     },
+    currentNamespace() {
+      this.loading = true;
+      this.loadData().finally(() => {
+        this.loading = false;
+      });
+    },
   },
   destroyed() {
     this.stopLoadTimer();
@@ -351,6 +357,7 @@ export default {
         .delete(selectId)
         .then(() => {
           this.loadData();
+          this.deleteTips = false;
           this.$notify({
             group: "default",
             type: "success",

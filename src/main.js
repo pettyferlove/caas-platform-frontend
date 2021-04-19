@@ -6,6 +6,7 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./vuex/store";
 import vuetify from "./plugins/vuetify";
+import VueExtends from "./libs/extends";
 import "./plugins/chartist";
 import Notify from "@/components/notification";
 import velocity from "velocity-animate";
@@ -15,6 +16,7 @@ import "./log";
 import("es6-shim");
 
 Vue.use(Notify, { velocity });
+Vue.use(VueExtends);
 
 Vue.config.productionTip = false;
 

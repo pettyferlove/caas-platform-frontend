@@ -39,7 +39,7 @@
               placeholder="填写项目名称"
               v-model="formData.projectName"
               :counter="50"
-              :rules="[(v) => !!v || '必须填写项目名称']"
+              :rules="[(v) => validKey(v) || '必须填写项目名称']"
               prepend-icon="mdi-database-edit"
               required
             ></v-text-field>
@@ -232,18 +232,6 @@
                 </v-row>
               </v-alert>
             </template>
-
-            <v-text-field
-              label="镜像仓库别名"
-              placeholder="填写镜像仓库别名，别名是为了更好的划分一组镜像，你可以自定义名称也可以使用默认的"
-              v-model="formData.imagesDepositoryAlias"
-              :counter="40"
-              :disabled="operaType === `edit`"
-              :prefix="user.username + `-`"
-              prepend-icon="mdi-stackpath"
-              :rules="[(v) => !!v || '请填写别名']"
-              required
-            ></v-text-field>
 
             <v-switch
               v-model="formData.needBuildImage"
@@ -582,10 +570,6 @@ export default {
     loadDetail() {
       api.projectBuild.get(this.id).then((res) => {
         let data = res.data;
-        data.imagesDepositoryAlias = data.imagesDepositoryAlias.replace(
-          this.user.username + "-",
-          ""
-        );
         this.formData = data;
         this.searchProjects = data.sourceProjectName;
         if (this.formData.projectId) {
@@ -679,14 +663,13 @@ export default {
         this.$set(this.formData, "projectName", project.name);
         this.$set(this.formData, "sourceProjectWebUrl", project.webUrl);
         this.loadProjectBranches(project.id);
-        if (project.owner) {
-          this.$set(
-            this.formData,
-            "imagesDepositoryAlias",
-            project.owner.username
-          );
-        }
       }
+    },
+    validKey(val) {
+      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+        return "只能输入小写英文字符和下划线";
+      }
+      return true;
     },
   },
 };

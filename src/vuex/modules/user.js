@@ -28,6 +28,9 @@ const getters = {
   getRoles: (state) => {
     return state.roles;
   },
+  getPermissions: (state) => {
+    return state.permissions;
+  },
 };
 
 // actions

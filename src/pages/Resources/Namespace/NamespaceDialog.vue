@@ -13,7 +13,7 @@
                   <v-text-field
                     :disabled="id.length !== 0"
                     v-model="formData.name"
-                    :rules="[(v) => !!v || 'Namespace名称不可为空']"
+                    :rules="[(v) => validKey(v) || 'Namespace名称不可为空']"
                     label="名称"
                     required
                   ></v-text-field>
@@ -170,6 +170,12 @@ export default {
             });
         }
       }
+    },
+    validKey(val) {
+      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+        return "只能输入小写英文字符和下划线";
+      }
+      return true;
     },
   },
 };

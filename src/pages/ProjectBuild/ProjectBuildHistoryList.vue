@@ -52,7 +52,7 @@
                     <v-icon small>mdi-cloud-download</v-icon>
                   </v-btn>
                 </template>
-                <span>下载构建脚本</span>
+                <span>下载构建产物</span>
               </v-tooltip>
 
               <v-tooltip bottom>

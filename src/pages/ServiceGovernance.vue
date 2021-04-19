@@ -3,7 +3,6 @@
     <v-btn icon color="cyan" @click="click">
       <v-icon small>mdi-wrench-outline</v-icon>
     </v-btn>
-
     <v-btn icon color="cyan" @click="close">
       <v-icon small>mdi-wrench-outline</v-icon>
     </v-btn>
