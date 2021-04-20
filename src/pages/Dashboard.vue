@@ -141,7 +141,6 @@
 
 <script>
 import MaterialChartCard from "@components/card/MaterialChartCard";
-import api from "@/api";
 export default {
   name: "Dashboard",
   components: { MaterialChartCard },
@@ -234,18 +233,7 @@ export default {
       },
     };
   },
-  mounted() {
-    api.userConfiguration.check().catch((err) => {
-      this.$notify({
-        group: "default",
-        position: "top",
-        duration: 5000,
-        speed: 100,
-        type: "error",
-        title: err.message,
-      });
-    });
-  },
+  mounted() {},
 };
 </script>
 

@@ -36,13 +36,20 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       if (
-        store.getters.getUser === undefined ||
-        Object.keys(store.getters.getUser).length === 0
+        store.getters.GetUser === undefined ||
+        Object.keys(store.getters.GetUser).length === 0
       ) {
         store
           .dispatch("UserInfo")
           .then(() => {
-            next({ ...to, replace: true });
+            store
+              .dispatch("CheckConfig")
+              .then(() => {
+                next({ ...to, replace: true });
+              })
+              .catch(() => {
+                next("/totally-configure");
+              });
           })
           .catch(() => {
             LoadingBar.error();
@@ -56,7 +63,22 @@ router.beforeEach((to, from, next) => {
             path: "*",
           });
         } else {
-          next();
+          if (store.getters.isReady) {
+            if (to.path === "/totally-configure") {
+              LoadingBar.finish();
+              next("/");
+            } else {
+              next();
+            }
+            next();
+          } else {
+            if (to.path !== "/totally-configure") {
+              LoadingBar.finish();
+              next("/totally-configure");
+            } else {
+              next();
+            }
+          }
         }
       }
     }

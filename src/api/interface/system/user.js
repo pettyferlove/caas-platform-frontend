@@ -18,5 +18,11 @@ const user = {
   update(params) {
     return Http.PutJSON(baseUrl + "/user", params);
   },
+  checkConfig() {
+    return Http.Get(baseUrl + "/user/check/config");
+  },
+  initConfig(params) {
+    return Http.PostJSON(baseUrl + "/user/init/config", params);
+  },
 };
 export { user };

@@ -40,13 +40,13 @@ let menuData = [
     text: "系统资源",
     group: "resources",
     active: false,
-    role: "USER",
+    role: "ADMIN",
     children: [
       {
         icon: "mdi-hexagon-slice-4",
         text: "命名空间",
         path: "/resources/namespace",
-        role: "USER",
+        role: "ADMIN",
       },
       {
         icon: "mdi-database",

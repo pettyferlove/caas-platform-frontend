@@ -23,15 +23,6 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="3">
-                <EnvironmentType
-                  label="请选择环境类型"
-                  hide-icon
-                  outlined
-                  dense
-                  v-model="queryParams.envType"
-                ></EnvironmentType>
-              </v-col>
-              <v-col cols="12" sm="6" md="3">
                 <v-btn @click="handlerSearch" rounded color="primary"
                   ><v-icon dark>mdi-magnify</v-icon></v-btn
                 >
@@ -53,12 +44,6 @@
                 itemsPerPageOptions: [5, 10, 15],
               }"
             >
-              <template v-slot:item.envType="{ item }">
-                <EnvironmentType
-                  :value="item.envType"
-                  type="label"
-                ></EnvironmentType>
-              </template>
               <template v-slot:item.istio="{ item }">
                 <v-chip color="primary" outlined v-if="item.istio" class="ma-2">
                   已开启
@@ -112,10 +97,9 @@
 import api from "@/api";
 import MaterialCard from "@components/card/MaterialCard";
 import NamespaceDialog from "@/pages/Resources/Namespace/NamespaceDialog";
-import EnvironmentType from "@components/base/EnvironmentType";
 export default {
   name: "Namespace",
-  components: { EnvironmentType, NamespaceDialog, MaterialCard },
+  components: { NamespaceDialog, MaterialCard },
   data: () => {
     return {
       initLoading: false,

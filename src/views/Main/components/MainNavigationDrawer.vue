@@ -18,7 +18,7 @@
     <v-list nav>
       <v-list-item two-line :class="drawer && 'px-0'">
         <v-list-item-avatar>
-          <img :src="avatarUrl" alt="avatar" />
+          <img :src="systemImageUrl" alt="avatar" />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -29,6 +29,49 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+    </v-list>
+    <v-divider />
+    <v-list class="mb-n2" nav>
+      <v-list-group
+        group="user"
+        color="white"
+        no-action
+        eager
+        append-icon="mdi-menu-down"
+      >
+        <template v-slot:activator>
+          <v-list-item-avatar class="align-self-center" color="grey">
+            <v-img :src="user.avatar || require('./@assets/avatar/1.jpg')" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title> {{ user.nickname }} </v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <v-list-item @click="clickUserCenter()">
+          <v-list-item-icon style="margin-right: 0">
+            <v-icon>mdi-account</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>个人资料</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="clickUserConfiguration()">
+          <v-list-item-icon style="margin-right: 0">
+            <v-icon>mdi-cogs</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>个人配置</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="logout()">
+          <v-list-item-icon style="margin-right: 0">
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>安全退出</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
     </v-list>
     <v-divider class="mb-2" />
     <v-list expand nav>
@@ -103,6 +146,7 @@ export default {
   computed: {
     ...mapGetters({
       barColor: "GetBarColor",
+      user: "GetUser",
     }),
     drawer: {
       get() {
@@ -142,6 +186,29 @@ export default {
         }
       });
       return menu;
+    },
+    clickUserCenter() {
+      this.$router
+        .push({
+          name: "UserProfile",
+        })
+        .catch(() => {});
+    },
+    clickUserConfiguration() {
+      this.$router
+        .push({
+          name: "UserConfiguration",
+        })
+        .catch(() => {});
+    },
+    logout() {
+      this.$store.dispatch("Logout").then(() => {
+        this.$router
+          .push({
+            name: "Login",
+          })
+          .catch(() => {});
+      });
     },
   },
 };

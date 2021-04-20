@@ -4,6 +4,7 @@ import { setLocalStorage, removeLocalStorage } from "@/libs/localStorage";
 // state
 const state = {
   isLogin: eval(Cookies.get("is_login")) || false,
+  isReady: eval(Cookies.get("is_ready")) || false,
   authInfo: {
     access_token: Cookies.get("access_token") || "",
     refresh_token: Cookies.get("refresh_token") || "",
@@ -19,10 +20,13 @@ const getters = {
   isLogin: (state) => {
     return state.isLogin;
   },
+  isReady: (state) => {
+    return state.isReady;
+  },
   getAccessToken: (state) => {
     return state.authInfo.access_token;
   },
-  getUser: (state) => {
+  GetUser: (state) => {
     return state.user;
   },
   getRoles: (state) => {
@@ -89,6 +93,20 @@ const actions = {
         });
     });
   },
+  CheckConfig({ commit }) {
+    return new Promise((resolve, reject) => {
+      api.user
+        .checkConfig()
+        .then(() => {
+          commit("SetReady", true);
+          resolve();
+        })
+        .catch((error) => {
+          commit("SetReady", false);
+          reject(error);
+        });
+    });
+  },
 };
 
 // mutations
@@ -123,6 +141,10 @@ const mutations = {
   SetUserInfo(state, info) {
     state.user = info;
     state.roles = info.roles;
+  },
+  SetReady(state, isReady) {
+    state.isReady = isReady || false;
+    Cookies.set("is_ready", isReady || false);
   },
 };
 

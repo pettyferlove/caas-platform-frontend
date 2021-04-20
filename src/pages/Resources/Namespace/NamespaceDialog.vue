@@ -36,11 +36,6 @@
                   ></v-textarea>
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col>
-                  <EnvironmentType v-model="formData.envType"></EnvironmentType>
-                </v-col>
-              </v-row>
             </v-form>
           </v-container>
         </v-card-text>
@@ -56,11 +51,9 @@
 
 <script>
 import api from "@/api";
-import EnvironmentType from "@components/base/EnvironmentType";
 
 export default {
   name: "NamespaceDialog",
-  components: { EnvironmentType },
   props: {
     id: {
       required: false,
@@ -81,22 +74,7 @@ export default {
     return {
       formData: {
         istio: false,
-        envType: 1,
       },
-      environmentTypes: [
-        {
-          name: "开发环境",
-          value: 1,
-        },
-        {
-          name: "测试环境",
-          value: 2,
-        },
-        {
-          name: "生产环境",
-          value: 9,
-        },
-      ],
     };
   },
   watch: {

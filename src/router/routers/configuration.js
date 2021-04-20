@@ -17,5 +17,14 @@ const configuration = [
     component: (resolve) =>
       require(["@/pages/Config/UserConfiguration/Index"], resolve),
   },
+  {
+    path: "totally-configure",
+    name: "TotallyConfigure",
+    meta: {
+      title: "完善配置",
+    },
+    component: (resolve) =>
+      require(["@/pages/Config/TotallyConfigure"], resolve),
+  },
 ];
 export default configuration;

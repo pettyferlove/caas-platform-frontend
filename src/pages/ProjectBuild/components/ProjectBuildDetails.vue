@@ -505,7 +505,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: "getUser",
+      user: "GetUser",
       currentNamespace: "GetCurrentNamespace",
     }),
   },
