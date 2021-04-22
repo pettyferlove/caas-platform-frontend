@@ -24,9 +24,21 @@ let menuData = [
     role: "USER",
   },
   {
+    icon: "mdi-server-network",
+    text: "服务发现",
+    path: "/service-discovery",
+    role: "USER",
+  },
+  {
     icon: "mdi-file-cog",
     text: "配置管理",
     path: "/config",
+    role: "USER",
+  },
+  {
+    icon: "mdi-database",
+    text: "持久化存储",
+    path: "/persistent-storage",
     role: "USER",
   },
   {
@@ -37,7 +49,7 @@ let menuData = [
   },
   {
     icon: "mdi-diameter",
-    text: "系统资源",
+    text: "全局资源",
     group: "resources",
     active: false,
     role: "ADMIN",
@@ -52,6 +64,12 @@ let menuData = [
         icon: "mdi-database",
         text: "持久卷",
         path: "/resources/persistent-volume",
+        role: "ADMIN",
+      },
+      {
+        icon: "mdi-nas",
+        text: "存储类",
+        path: "/resources/storage-class",
         role: "ADMIN",
       },
     ],

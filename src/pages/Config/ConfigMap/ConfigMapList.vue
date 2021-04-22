@@ -310,6 +310,7 @@ export default {
         .delete(selectId)
         .then(() => {
           this.loadData();
+          this.deleteTips = false;
           this.$notify({
             group: "default",
             type: "success",

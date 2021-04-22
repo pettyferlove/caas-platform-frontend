@@ -10,7 +10,7 @@
           item-text="projectName"
           item-value="id"
           @change="changeProjectBuild"
-          label="自动构建项目"
+          label="选择自动构建项目"
           placeholder="使用自动构建项目来部署，简化您的部署流程"
           :rules="[(v) => !!v || '请选择自动构建项目']"
           prepend-icon="mdi-highway"
@@ -233,6 +233,14 @@ export default {
       let projectBuild = this.projectBuilds.find((i) => {
         return i.id === value;
       });
+      if (projectBuild.needBuildImage !== 1) {
+        this.$notify({
+          group: "default",
+          type: "error",
+          title:
+            "该项目没有开启镜像构建，如果镜像仓库存在历史记录将使用最后一次构建的镜像，如果不存在则无法获取镜像",
+        });
+      }
       if (projectBuild) {
         this.$set(this.formData, "name", projectBuild.projectName);
         this.$set(

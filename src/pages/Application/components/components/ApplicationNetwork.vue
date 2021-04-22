@@ -53,8 +53,8 @@
         ]"
       ></v-select>
       <v-row
-        v-for="(item, index) in formData.networks"
-        v-bind:key="`networks-` + index"
+        v-for="(item, index) in formData.localPorts"
+        v-bind:key="`ports-` + index"
       >
         <v-col cols="12" md="4">
           <v-select
@@ -95,7 +95,7 @@
             dark
             small
             color="secondary"
-            @click="addNetwork(index)"
+            @click="addPort(index)"
           >
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
@@ -105,7 +105,7 @@
             dark
             small
             color="warning"
-            @click="removeNetwork(index)"
+            @click="removePort(index)"
           >
             <v-icon dark>mdi-delete</v-icon>
           </v-btn>
@@ -196,7 +196,7 @@ export default {
       this.isInit = false;
     },
     validate() {
-      if (this.formData.networks.length < 1) {
+      if (this.formData.localPorts.length < 1) {
         return false;
       }
       return this.$refs.form.validate();
@@ -221,14 +221,14 @@ export default {
           });
       });
     },
-    addNetwork(index) {
-      this.formData.networks.splice(index + 1, 0, { protocol: "TCP" });
+    addPort(index) {
+      this.formData.localPorts.splice(index + 1, 0, { protocol: "TCP" });
     },
-    removeNetwork(index) {
-      if (this.formData.networks.length === 1) {
+    removePort(index) {
+      if (this.formData.localPorts.length === 1) {
         return;
       }
-      this.formData.networks.splice(index, 1);
+      this.formData.localPorts.splice(index, 1);
     },
   },
   mounted() {

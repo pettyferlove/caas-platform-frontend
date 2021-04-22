@@ -40,5 +40,26 @@ const resources = [
     component: (resolve) =>
       require(["@/pages/Resources/PersistentVolume"], resolve),
   },
+  {
+    path: "resources/storage-class",
+    name: "StorageClass",
+    meta: {
+      title: "储存类",
+    },
+    redirect: "resources/storage-class/list",
+    component: (resolve) =>
+      require(["@/pages/Resources/StorageClass/Index"], resolve),
+    children: [
+      {
+        path: "list",
+        name: "StorageClassList",
+        meta: {
+          title: "储存类",
+        },
+        component: (resolve) =>
+          require(["@/pages/Resources/StorageClass/StorageClassList"], resolve),
+      },
+    ],
+  },
 ];
 export default resources;

@@ -5,6 +5,8 @@ import sqlBuild from "@/router/routers/sql-build";
 import resources from "@/router/routers/resources";
 import application from "@/router/routers/application";
 import configMap from "@/router/routers/config-map";
+import serviceDiscovery from "@/router/routers/service-discovery";
+import persistentStorage from "@/router/routers/persistent-storage";
 
 import user from "@/router/routers/user";
 
@@ -38,7 +40,9 @@ export const mainRouter = {
     .concat(sqlBuild)
     .concat(application)
     .concat(configMap)
+    .concat(serviceDiscovery)
     .concat(resources)
+    .concat(persistentStorage)
     .concat(user),
 };
 

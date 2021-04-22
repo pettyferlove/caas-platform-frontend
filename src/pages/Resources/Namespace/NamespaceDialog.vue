@@ -150,7 +150,7 @@ export default {
       }
     },
     validKey(val) {
-      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+      if (!val || !/^[a-z0-9_\\-]+$/g.test(val)) {
         return "只能输入小写英文字符和下划线";
       }
       return true;

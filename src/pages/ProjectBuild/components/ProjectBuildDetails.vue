@@ -46,9 +46,8 @@
             <v-alert
               dense
               color="blue-grey"
-              icon="mdi-tag-multiple-outline"
-              prominent
               text
+              style="padding: 0"
               type="info"
             >
               项目名将作为最终镜像（War包、Jar包）的名称，请勿添加特殊字符
@@ -213,7 +212,12 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-alert text type="info" color="deep-orange">
+              <v-alert
+                style="padding: 10px 5px"
+                text
+                type="info"
+                color="deep-orange"
+              >
                 <h3 class="headline">说明</h3>
                 <div>项目文件夹作为根目录</div>
                 <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
@@ -257,7 +261,12 @@
                   prepend-icon="mdi-stackpath"
                   required
                 ></v-text-field>
-                <v-alert text type="info" color="deep-orange">
+                <v-alert
+                  style="padding: 10px 5px"
+                  text
+                  type="info"
+                  color="deep-orange"
+                >
                   <h3 class="headline">说明</h3>
                   <div>项目文件夹作为根目录</div>
                   <v-divider
@@ -666,7 +675,7 @@ export default {
       }
     },
     validKey(val) {
-      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+      if (!val || !/^[a-z0-9_\\-]+$/g.test(val)) {
         return "只能输入小写英文字符和下划线";
       }
       return true;

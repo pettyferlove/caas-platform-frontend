@@ -79,10 +79,11 @@
               transition="scale-transition"
               v-if="formData.depositoryType === 1"
               dense
+              style="padding: 0"
               border="left"
               type="warning"
             >
-              由于Http方式需要明文传输用户名&密码，将会产生额外安全性问题；建议使用SSH方式访问源码仓库
+              Git远程仓库请使用SSH链接
             </v-alert>
             <v-row v-if="formData.depositoryType === 1">
               <v-col cols="12" md="6">
@@ -316,16 +317,16 @@ export default {
         });
         this.$set(this.formData, "remoteBranch", "master");
       } else {
+        authTypes.push({
+          name: "Username&Password",
+          value: 2,
+        });
         this.$set(this.formData, "remoteBranch", "trunk");
       }
-      authTypes.push({
-        name: "Username&Password",
-        value: 2,
-      });
       this.authTypes = authTypes;
     },
     validKey(val) {
-      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+      if (!val || !/^[a-z0-9_\\-]+$/g.test(val)) {
         return "只能输入小写英文字符和下划线";
       }
       return true;

@@ -133,6 +133,7 @@ export default {
       submitting: false,
       defaultData: {
         environmentVariable: "",
+        ports: "",
         localEnvironmentVariable: [{}],
         mounts: [{}],
         instancesNumber: 1,
@@ -143,8 +144,8 @@ export default {
         maxUnavaible: 1,
         envType: 1,
         network: "internal",
-        networkType: "ClusterIP",
-        networks: [{ protocol: "TCP" }],
+        networkType: "NodePort",
+        localPorts: [{ protocol: "TCP" }],
       },
       formData: {},
       types: {
@@ -194,6 +195,17 @@ export default {
           } else {
             this.$set(this.formData, "localEnvironmentVariable", [{}]);
           }
+
+          if (this.formData.ports) {
+            this.$set(
+              this.formData,
+              "localPorts",
+              JSON.parse(this.formData.ports)
+            );
+          } else {
+            this.$set(this.formData, "localPorts", [{ protocol: "TCP" }]);
+          }
+
           if (!this.formData.mounts) {
             this.$set(this.formData, "mounts", [{}]);
           }
@@ -243,6 +255,9 @@ export default {
                 that.formData.localEnvironmentVariable
               );
             }
+            if (that.formData.localPorts) {
+              that.formData.ports = JSON.stringify(that.formData.localPorts);
+            }
             api.applicationDeployment
               .create(that.currentNamespace.id, that.formData)
               .then(() => {
@@ -275,6 +290,9 @@ export default {
               that.formData.environmentVariable = JSON.stringify(
                 that.formData.localEnvironmentVariable
               );
+            }
+            if (that.formData.localPorts) {
+              that.formData.ports = JSON.stringify(that.formData.localPorts);
             }
             api.applicationDeployment
               .update(that.currentNamespace.id, that.formData)
