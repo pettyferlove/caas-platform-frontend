@@ -20,6 +20,7 @@
         >
           <v-form ref="form">
             <v-text-field
+              :disabled="operaType !== `add`"
               label="配置名称"
               placeholder="填写配置名称"
               v-model="formData.configName"

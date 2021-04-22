@@ -20,6 +20,7 @@
         >
           <v-form ref="form">
             <v-text-field
+              :disabled="operaType !== `add`"
               label="持久化存储名称"
               placeholder="填写名称"
               v-model="formData.name"
