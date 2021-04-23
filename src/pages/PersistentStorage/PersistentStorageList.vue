@@ -2,10 +2,10 @@
   <v-row>
     <v-col>
       <material-card
-        icon="mdi-history"
+        icon="mdi-database"
         color="warning"
         class="px-5 py-3"
-        title="应用管理"
+        title="持久化存储"
       >
         <v-skeleton-loader
           transition="fade-transition"
@@ -83,6 +83,23 @@
           </div>
         </v-skeleton-loader>
       </material-card>
+      <v-dialog v-model="deleteTips" persistent max-width="400">
+        <v-card>
+          <v-card-title class="headline"> 是否删除持久化存储？ </v-card-title>
+          <v-card-text
+            >该操作无法撤销，根据存储服务提供者回收策略进行回收可能会直接销毁您的文件</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" @click="deleteTips = false">
+              取消
+            </v-btn>
+            <v-btn color="error darken-1" @click="deleteConfirm(selectId)">
+              同意
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -98,6 +115,8 @@ export default {
   components: { EnvironmentType, MaterialCard },
   data: () => {
     return {
+      deleteTips: false,
+      selectId: "",
       initLoading: false,
       loading: false,
       total: 0,
@@ -225,15 +244,20 @@ export default {
       });
     },
     handlerDelete(item) {
-      api.applicationDeployment
-        .delete(this.currentNamespace.id, item.id)
+      this.selectId = item.id;
+      this.deleteTips = true;
+    },
+    deleteConfirm(selectId) {
+      api.persistentStorage
+        .delete(selectId)
         .then(() => {
+          this.loadData();
+          this.deleteTips = false;
           this.$notify({
             group: "default",
             type: "success",
             title: "删除成功",
           });
-          this.loadData();
         })
         .catch(() => {
           this.$notify({

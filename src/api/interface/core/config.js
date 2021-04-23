@@ -9,14 +9,14 @@ const config = {
   create(params) {
     return Http.Post(baseUrl + "/core/config", params);
   },
-  get(params) {
-    return Http.Get(baseUrl + "/core/config/" + params);
+  get(id) {
+    return Http.Get(baseUrl + `/core/config/${id}`);
   },
   update(params) {
     return Http.Put(baseUrl + "/core/config", params);
   },
-  delete(params) {
-    return Http.Delete(baseUrl + "/core/config/" + params);
+  delete(id) {
+    return Http.Delete(baseUrl + `/core/config/${id}`);
   },
   select(namespaceId) {
     return Http.Get(baseUrl + `/core/config/select/${namespaceId}`);

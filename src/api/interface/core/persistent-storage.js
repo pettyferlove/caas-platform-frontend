@@ -12,14 +12,17 @@ const persistentStorage = {
   create(params) {
     return Http.PostJSON(baseUrl + "/core/persistent-storage", params);
   },
-  get(namespaceId, id) {
-    return Http.Get(baseUrl + `/core/persistent-storage/${namespaceId}/${id}`);
+  get(id) {
+    return Http.Get(baseUrl + `/core/persistent-storage/${id}`);
   },
   update(params) {
     return Http.PutJSON(baseUrl + "/core/persistent-storage", params);
   },
   select(namespaceId) {
     return Http.Get(baseUrl + `/core/persistent-storage/select/${namespaceId}`);
+  },
+  delete(id) {
+    return Http.Delete(baseUrl + `/core/persistent-storage/${id}`);
   },
 };
 export { persistentStorage };
