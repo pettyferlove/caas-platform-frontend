@@ -24,10 +24,12 @@ import { harborRegister } from "./interface/engine/docker/register/harbor";
 
 /*System*/
 import { buildFile } from "./interface/system/build-file";
+import { message } from "./interface/system/system";
 
 export default {
   login,
   user,
+  message,
   buildFile,
   deployment,
   namespace,

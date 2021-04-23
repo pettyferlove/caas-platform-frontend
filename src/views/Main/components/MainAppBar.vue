@@ -27,39 +27,7 @@
     <v-btn class="ml-2" min-width="0" text to="/">
       <v-icon>mdi-view-dashboard</v-icon>
     </v-btn>
-    <v-menu
-      bottom
-      left
-      offset-y
-      origin="top right"
-      transition="scale-transition"
-    >
-      <template v-slot:activator="{ attrs, on }">
-        <v-btn class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
-          <v-badge color="red" overlap bordered>
-            <template v-slot:badge>
-              <span>5</span>
-            </template>
-
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
-        </v-btn>
-      </template>
-
-      <v-list :tile="false" nav>
-        <v-hover v-slot:default="{ hover }">
-          <v-list-item
-            link
-            :dark="hover"
-            :class="
-              hover ? 'white--text secondary elevation-12' : 'black--text'
-            "
-          >
-            消息列表1
-          </v-list-item>
-        </v-hover>
-      </v-list>
-    </v-menu>
+    <UserMessage></UserMessage>
     <!--    <v-btn class="ml-2" min-width="0" text to="/user">
       <v-icon>mdi-account</v-icon>
     </v-btn>-->
@@ -71,20 +39,10 @@
 import { mapGetters, mapMutations } from "vuex";
 import NamespaceSelect from "@/views/Main/components/components/NamespaceSelect";
 import UserSelect from "@/views/Main/components/components/UserSelect";
+import UserMessage from "@/views/Main/components/components/UserMessage";
 export default {
   name: "MainAppBar",
-  components: { UserSelect, NamespaceSelect },
-  data: () => {
-    return {
-      notifications: [
-        "Mike John Responded to your email",
-        "You have 5 new tasks",
-        "You're now friends with Andrew",
-        "Another Notification",
-        "Another one",
-      ],
-    };
-  },
+  components: { UserMessage, UserSelect, NamespaceSelect },
   computed: {
     ...mapGetters({
       drawer: "GetDrawer",

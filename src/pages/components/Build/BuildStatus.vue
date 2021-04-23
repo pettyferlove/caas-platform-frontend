@@ -41,7 +41,6 @@ export default {
   props: {
     state: {
       required: true,
-      type: String,
     },
   },
 };

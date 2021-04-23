@@ -28,6 +28,35 @@
         </div>
       </template>
     </notifications>
+
+    <notifications
+      style="top: 100px"
+      width="400"
+      position="top right"
+      group="system"
+      loading-animation-name="right-to-left"
+    >
+      <template slot="body" slot-scope="props">
+        <div :class="['notifications-wrapper', props.item.type]">
+          <div
+            class="notifications-wrapper-border"
+            :style="{
+              'animation-duration': props.item.length + 'ms',
+              'animation-name': props.item.loadingAnimationName,
+            }"
+          ></div>
+          <div class="notifications-wrapper-content">
+            <div>{{ props.item.title }}</div>
+            <div>{{ props.item.text }}</div>
+          </div>
+          <div class="notifications-wrapper-action">
+            <v-btn icon color="white" @click="props.close">
+              <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </template>
+    </notifications>
   </div>
 </template>
 <script>

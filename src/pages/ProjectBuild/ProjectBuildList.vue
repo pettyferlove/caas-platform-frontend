@@ -62,12 +62,21 @@
 
               <template v-slot:item.projectName="{ item }">
                 <span>
-                  <v-chip class="ma-2" color="cyan" text-color="white">
+                  <v-chip
+                    v-if="item.buildTool"
+                    class="ma-2"
+                    color="cyan"
+                    text-color="white"
+                  >
                     <v-icon left> mdi-hammer-wrench </v-icon>
                     {{
                       item.buildTool.charAt(0).toUpperCase() +
                       item.buildTool.slice(1)
                     }}
+                  </v-chip>
+                  <v-chip v-else class="ma-2" color="cyan" text-color="white">
+                    <v-icon left> mdi-blur-off </v-icon>
+                    None
                   </v-chip>
                   {{ item.projectName }}
                 </span>
