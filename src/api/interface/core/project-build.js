@@ -21,8 +21,11 @@ const projectBuild = {
   delete(params) {
     return Http.Delete(baseUrl + "/core/project-build/" + params);
   },
-  select(params) {
-    return Http.Get(baseUrl + "/core/project-build/select", params);
+  select(namespaceId, params) {
+    return Http.Get(
+      baseUrl + `/core/project-build/select/${namespaceId}`,
+      params
+    );
   },
   updateStatus(params) {
     return Http.Put(baseUrl + "/core/project-build/status", params);

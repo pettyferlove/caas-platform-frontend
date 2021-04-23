@@ -101,6 +101,7 @@
 <script>
 import EnvironmentType from "@components/base/EnvironmentType";
 import api from "@/api";
+import { mapGetters } from "vuex";
 export default {
   name: "ApplicationInfo",
   components: { EnvironmentType },
@@ -189,7 +190,7 @@ export default {
     loadProjectBuildProject() {
       return new Promise((resolve, reject) => {
         api.projectBuild
-          .select({
+          .select(this.currentNamespace.id, {
             envType: this.formData.envType || 1,
           })
           .then((res) => {
@@ -269,6 +270,11 @@ export default {
     validate() {
       return this.$refs.form.validate();
     },
+  },
+  computed: {
+    ...mapGetters({
+      currentNamespace: "GetCurrentNamespace",
+    }),
   },
   mounted() {
     if (this.value) {

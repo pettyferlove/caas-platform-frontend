@@ -66,9 +66,6 @@
               <template v-slot:item.groupStatus="{ item }">
                 <span>{{ item.replicas + "/" + item.readyReplicas }}</span>
               </template>
-              <template v-slot:item.creationTimestamp="{ item }">
-                {{ formatDate(item.creationTimestamp) }}
-              </template>
               <template v-slot:item.actions="{ item }">
                 <v-btn icon color="green" @click="handlerView(item)">
                   <v-icon small>mdi-eye</v-icon>
@@ -92,7 +89,6 @@
 import { mapGetters } from "vuex";
 import MaterialCard from "@components/card/MaterialCard";
 import api from "@/api";
-import dayjs from "dayjs";
 import EnvironmentType from "@components/base/EnvironmentType";
 
 export default {
@@ -129,7 +125,8 @@ export default {
         },
         { text: "容器组状态", align: "center", value: "groupStatus" },
         { text: "镜像名称", value: "imagesName" },
-        { text: "创建时间", align: "center", value: "creationTimestamp" },
+        { text: "创建时间", align: "center", value: "createTime" },
+        { text: "更新时间", align: "center", value: "modifyTime" },
         {
           text: "操作",
           value: "actions",
@@ -205,9 +202,6 @@ export default {
           resolve();
         }
       });
-    },
-    formatDate(date) {
-      return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
     },
     handlerView(item) {
       this.$router.push({
