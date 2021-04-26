@@ -71,6 +71,8 @@
 
         <v-stepper-content :step="hasRole('ADMIN') ? '2' : '1'">
           <v-form ref="userForm">
+            <v-subheader> GitLab配置 </v-subheader>
+            <v-divider style="margin-bottom: 20px"></v-divider>
             <v-text-field
               :rules="[(v) => !!v || '请填写Gitlab地址']"
               label="Gitlab地址"
@@ -84,6 +86,22 @@
               required
               type="password"
               v-model="userFormData.gitlabApiToken"
+            ></v-text-field>
+
+            <v-subheader> Subversion配置（可选） </v-subheader>
+            <v-divider style="margin-bottom: 20px"></v-divider>
+
+            <v-text-field
+              label="Subversion用户名"
+              required
+              v-model="formData.subversionUsername"
+            ></v-text-field>
+
+            <v-text-field
+              label="Subversion用户密码"
+              required
+              type="password"
+              v-model="formData.subversionPassword"
             ></v-text-field>
           </v-form>
           <v-btn
@@ -150,7 +168,9 @@ export default {
     return {
       step: 1,
       submitting: false,
-      globalFormData: {},
+      globalFormData: {
+        gitlabHomePath: "http://gitlab.ggjs.sinobest.cn/",
+      },
       userFormData: {},
       namespaceFormData: {
         istio: true,

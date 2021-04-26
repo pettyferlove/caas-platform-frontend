@@ -19,21 +19,6 @@
           :loading="initLoading"
         >
           <v-form ref="form">
-            <!--<v-switch
-              v-model="formData.isGitlab"
-              class="mx-2"
-              label="Gitlab项目"
-            ></v-switch>-->
-            <!--<v-select
-              :loading="projectsLoading"
-              v-if="formData.isGitlab"
-              :filter="true"
-              :items="projects"
-              item-text="name"
-              item-value="httpUrl"
-              label="Color"
-            ></v-select>-->
-
             <v-text-field
               label="项目名称"
               placeholder="填写项目名称"
@@ -43,99 +28,101 @@
               prepend-icon="mdi-database-edit"
               required
             ></v-text-field>
-            <v-alert
-              dense
-              color="blue-grey"
-              text
-              style="padding: 0"
-              type="info"
-            >
-              项目名将作为最终镜像（War包、Jar包）的名称，请勿添加特殊字符
-            </v-alert>
-            <v-autocomplete
-              v-model="formData.sourceProjectName"
-              :items="projects"
-              :loading="projectsLoading"
-              :search-input.sync="searchProjects"
-              item-text="name"
-              :disabled="formData.notFound"
-              item-value="name"
-              @change="changeSourceProject"
-              label="源码仓库"
-              :rules="[(v) => !!v || '必须选择源码仓库']"
-              required
-              placeholder="选择源码仓库"
-              prepend-icon="mdi-database-search"
-            >
-              <template v-slot:item="{ item }">
-                {{ item.nameWithNamespace }}
-              </template>
-            </v-autocomplete>
-            <v-row v-if="formData.sourceProjectName">
-              <v-col
-                cols="12"
-                :md="formData.triggerMethod === 'branch' ? 6 : 12"
-              >
+
+            <v-row>
+              <v-col cols="12" md="6">
                 <v-select
-                  v-model="formData.triggerMethod"
-                  :items="triggerMethods"
+                  v-model="formData.depositoryType"
+                  :items="depositoryTypes"
                   item-text="name"
                   item-value="value"
-                  label="触发条件"
-                  :rules="[(v) => !!v || '请选择触发条件']"
-                  required
-                  prepend-icon="mdi-wrench"
-                  @change="changeTriggerMethod"
+                  label="仓库类型"
+                  @change="changeDepositoryType"
+                  :rules="[(v) => !!v || '必须选择仓库类型']"
+                  prepend-icon="mdi-source-repository"
                 ></v-select>
               </v-col>
-
-              <v-col
-                cols="12"
-                md="6"
-                v-if="formData.triggerMethod === `branch`"
-              >
-                <v-select
-                  v-model="formData.branch"
-                  :items="projectBranches"
-                  :loading="projectBranchesLoading"
-                  item-text="name"
-                  item-value="name"
-                  label="选择分支"
-                  prepend-icon="mdi-wrench"
-                ></v-select>
-              </v-col>
-            </v-row>
-
-            <!--<v-switch
-              v-model="formData.notFound"
-              label="找不到你的项目？"
-              prepend-icon="mdi-help-circle-outline"
-            ></v-switch>
-
-            <template v-if="formData.notFound">
-              <v-text-field
-                label="项目名称"
-                placeholder="填写项目名称"
-                v-model="formData.projectName"
-                :counter="50"
-                prepend-icon="mdi-database-edit"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                label="仓库地址"
-                placeholder="填写仓库地址"
-                v-model="formData.cloneUrl"
-                :counter="100"
-                prepend-icon="mdi-database-edit"
-                required
-              ></v-text-field>
-            </template>-->
-            <v-row>
               <v-col cols="12" md="6">
                 <EnvironmentType v-model="formData.envType"></EnvironmentType>
               </v-col>
             </v-row>
+
+            <template v-if="formData.depositoryType === `gitlab_v4`">
+              <v-autocomplete
+                v-model="formData.sourceProjectName"
+                :items="projects"
+                :loading="projectsLoading"
+                :search-input.sync="searchProjects"
+                item-text="name"
+                :disabled="formData.notFound"
+                item-value="name"
+                @change="changeSourceProject"
+                label="源码仓库"
+                :rules="[(v) => !!v || '必须选择源码仓库']"
+                required
+                placeholder="选择源码仓库"
+                prepend-icon="mdi-database-search"
+              >
+                <template v-slot:item="{ item }">
+                  {{ item.nameWithNamespace }}
+                </template>
+              </v-autocomplete>
+
+              <v-text-field
+                disabled
+                label="仓库地址"
+                placeholder="填写仓库地址"
+                v-model="formData.remotePath"
+                :counter="100"
+                prepend-icon="mdi-database-edit"
+                required
+              ></v-text-field>
+
+              <v-row v-if="formData.sourceProjectName">
+                <v-col
+                  cols="12"
+                  :md="formData.triggerMethod === 'branch' ? 6 : 12"
+                >
+                  <v-select
+                    v-model="formData.triggerMethod"
+                    :items="triggerMethods"
+                    item-text="name"
+                    item-value="value"
+                    label="触发条件"
+                    :rules="[(v) => !!v || '请选择触发条件']"
+                    required
+                    prepend-icon="mdi-wrench"
+                    @change="changeTriggerMethod"
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="6"
+                  v-if="formData.triggerMethod === `branch`"
+                >
+                  <v-select
+                    v-model="formData.remoteBranch"
+                    :items="projectBranches"
+                    :loading="projectBranchesLoading"
+                    item-text="name"
+                    item-value="name"
+                    label="选择分支"
+                    prepend-icon="mdi-wrench"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </template>
+
+            <template v-if="formData.depositoryType === `subversion`">
+              <v-text-field
+                label="仓库地址"
+                placeholder="填写仓库地址"
+                v-model="formData.remotePath"
+                :counter="100"
+                prepend-icon="mdi-database-edit"
+                required
+              ></v-text-field>
+            </template>
 
             <v-switch
               v-model="formData.needBuildProject"
@@ -373,8 +360,9 @@ export default {
     return {
       id: "",
       formData: {
+        depositoryType: "gitlab_v4",
         triggerMethod: "branch",
-        branch: "master",
+        remoteBranch: "master",
         dockerfileAlreadyExists: 0,
         persistentBuildFile: 0,
         openAutoBuild: 1,
@@ -402,6 +390,16 @@ export default {
       projectBranchesLoading: false,
       searchProjects: null,
       searchRepository: null,
+      depositoryTypes: [
+        {
+          name: "GitLab V4",
+          value: "gitlab_v4",
+        },
+        {
+          name: "Subversion",
+          value: "subversion",
+        },
+      ],
       buildTools: [
         {
           name: "Maven",
@@ -478,8 +476,8 @@ export default {
       }
     },
     searchProjects(value) {
-      if (!this.formData.notFound) {
-        if (value !== null && value !== "") {
+      if (this.formData.depositoryType === `gitlab_v4`) {
+        if (value !== undefined && value !== null && value !== "") {
           this.projectsLoading = true;
           api.gitlabProject
             .searchProjects({
@@ -577,14 +575,18 @@ export default {
       });
     },
     loadDetail() {
+      this.initLoading = true;
       api.projectBuild.get(this.id).then((res) => {
         let data = res.data;
         this.formData = data;
-        this.searchProjects = data.sourceProjectName;
+        if (data.depositoryType === `gitlab_v4`) {
+          this.searchProjects = data.sourceProjectName;
+        }
         if (this.formData.projectId) {
           this.loadProjectBranches(this.formData.projectId);
         }
         this.id = res.data.id;
+        this.initLoading = false;
       });
     },
     loadProjects() {
@@ -614,7 +616,6 @@ export default {
       });
     },
     loadRepositoryTag(value) {
-      console.log(value);
       this.tagsLoading = true;
       api.harborRegister
         .queryRepositoryTag(value)
@@ -642,7 +643,7 @@ export default {
       if (value === "branch") {
         this.loadProjectBranches(this.formData.projectId);
       } else {
-        this.$set(this.formData, "branch", "master");
+        this.$set(this.formData, "remoteBranch", "master");
       }
     },
     changeBuildTool(value) {
@@ -662,13 +663,17 @@ export default {
         this.loadRepositoryTag(repo.repositoryName);
       }
     },
+    changeDepositoryType() {
+      this.searchProjects = this.formData.sourceProjectName;
+      this.changeSourceProject(this.formData.sourceProjectName);
+    },
     changeSourceProject(value) {
       let project = this.projects.find((i) => {
         return i.name === value;
       });
       if (project) {
-        this.$set(this.formData, "cloneUrl", project.httpUrl);
-        this.$set(this.formData, "projectId", project.id);
+        this.$set(this.formData, "remotePath", project.httpUrl);
+        this.$set(this.formData, "remoteProjectId", project.id);
         this.$set(this.formData, "projectName", project.name);
         this.$set(this.formData, "sourceProjectWebUrl", project.webUrl);
         this.loadProjectBranches(project.id);

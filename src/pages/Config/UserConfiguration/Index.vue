@@ -15,6 +15,9 @@
           :loading="initLoading"
         >
           <v-form ref="form">
+            <v-subheader> GitLab配置 </v-subheader>
+            <v-divider style="margin-bottom: 20px"></v-divider>
+
             <v-text-field
               :rules="[(v) => !!v || '请填写Gitlab地址']"
               label="Gitlab地址"
@@ -40,6 +43,7 @@
             <v-alert icon="mdi-shield-lock-outline" prominent text type="info">
               Gitlab拉取代码需要RSA密钥，首次修改个人设置将自动为您生成RSA密钥，后续您可通过刷新按钮更新密钥并应用至Gitlab
             </v-alert>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -52,6 +56,30 @@
                 <v-icon> mdi-refresh </v-icon>
                 更新RSA密钥
               </v-btn>
+            </v-card-actions>
+
+            <v-subheader> Subversion配置（可选） </v-subheader>
+            <v-divider style="margin-bottom: 20px"></v-divider>
+
+            <v-text-field
+              label="Subversion用户名"
+              required
+              v-model="formData.subversionUsername"
+            ></v-text-field>
+
+            <v-text-field
+              label="Subversion用户密码"
+              required
+              type="password"
+              v-model="formData.subversionPassword"
+            ></v-text-field>
+
+            <v-alert icon="mdi-shield-lock-outline" prominent text type="info">
+              Subversion目前只支持明文密码传输
+            </v-alert>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
               <v-btn
                 @click="submit"
                 :loading="submitting"

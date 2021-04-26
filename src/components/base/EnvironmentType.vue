@@ -10,7 +10,7 @@
       item-text="name"
       item-value="value"
       :label="label"
-      :prepend-icon="hideIcon ? `` : `mdi-wrench`"
+      :prepend-icon="hideIcon ? `` : `mdi-semantic-web`"
       @change="changeValue"
     ></v-select>
     <template v-else>
