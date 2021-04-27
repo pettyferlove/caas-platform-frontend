@@ -70,13 +70,10 @@
               </v-col>
             </v-row>
             <v-divider></v-divider>
-            <v-row>
-              <ConfigEditor
-                style="margin: 20px"
-                :type="formData.configType"
-                v-model="formData.content"
-              ></ConfigEditor>
-            </v-row>
+            <ConfigEditor
+              :type="formData.configType"
+              v-model="formData.content"
+            ></ConfigEditor>
           </v-form>
         </v-skeleton-loader>
         <v-card-actions>

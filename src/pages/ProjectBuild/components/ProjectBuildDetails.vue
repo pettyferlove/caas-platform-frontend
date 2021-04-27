@@ -29,6 +29,28 @@
               required
             ></v-text-field>
 
+            <v-switch
+              v-model="formData.linkProject"
+              label="需要关联其他项目？"
+              :true-value="true"
+              :false-value="false"
+              prepend-icon="mdi-link-variant-plus"
+            ></v-switch>
+
+            <v-select
+              v-if="formData.linkProject"
+              v-model="formData.parentId"
+              :items="projectBuilds"
+              :loading="projectBuildLoading"
+              item-text="projectName"
+              item-value="id"
+              @change="changeProjectBuild"
+              label="选择需要关联的父项目"
+              :rules="[(v) => !!v || '请选择关联项目']"
+              prepend-icon="mdi-link-variant"
+              required
+            ></v-select>
+
             <v-row>
               <v-col cols="12" md="6">
                 <v-select
@@ -43,7 +65,10 @@
                 ></v-select>
               </v-col>
               <v-col cols="12" md="6">
-                <EnvironmentType v-model="formData.envType"></EnvironmentType>
+                <EnvironmentType
+                  @change="changeEnvType"
+                  v-model="formData.envType"
+                ></EnvironmentType>
               </v-col>
             </v-row>
 
@@ -140,6 +165,28 @@
                 :false-value="0"
                 prepend-icon="mdi-wrench-outline"
               ></v-switch>
+
+              <v-switch
+                v-model="formData.runPreShellScript"
+                label="执行前置脚本？"
+                prepend-icon="mdi-powershell"
+              ></v-switch>
+
+              <ShellEditor
+                v-if="formData.runPreShellScript"
+                v-model="formData.preShellScript"
+              ></ShellEditor>
+
+              <v-switch
+                v-model="formData.runPostShellScript"
+                label="执行后置脚本？"
+                prepend-icon="mdi-powershell"
+              ></v-switch>
+
+              <ShellEditor
+                v-if="formData.runPostShellScript"
+                v-model="formData.postShellScript"
+              ></ShellEditor>
 
               <v-select
                 v-model="formData.buildTool"
@@ -346,10 +393,11 @@ import api from "@/api";
 import MaterialCard from "@components/card/MaterialCard";
 import { mapGetters } from "vuex";
 import EnvironmentType from "@components/base/EnvironmentType";
+import ShellEditor from "@components/editer/ShellEditor";
 
 export default {
   name: "ProjectBuildDetails",
-  components: { EnvironmentType, MaterialCard },
+  components: { ShellEditor, EnvironmentType, MaterialCard },
   props: {
     operaType: {
       type: String,
@@ -370,7 +418,9 @@ export default {
         needBuildImage: 1,
         envType: 1,
       },
+      projectBuildLoading: false,
       projects: [],
+      projectBuilds: [],
       repository: [],
       imageTags: [],
       projectBranches: [
@@ -451,6 +501,13 @@ export default {
         this.projectsLoading = false;
       });
 
+    if (this.operaType === "add") {
+      this.projectBuildLoading = true;
+      this.loadProjectBuildProject().finally(() => {
+        this.projectBuildLoading = false;
+      });
+    }
+
     this.repositoryLoading = true;
     this.loadRepository()
       .catch((err) => {
@@ -517,6 +574,22 @@ export default {
     }),
   },
   methods: {
+    loadProjectBuildProject() {
+      return new Promise((resolve, reject) => {
+        api.projectBuild
+          .select(this.currentNamespace.id, {
+            envType: this.formData.envType || 1,
+            currentId: this.formData.id,
+          })
+          .then((res) => {
+            this.projectBuilds = res.data;
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
     submit() {
       if (this.$refs.form.validate()) {
         this.submitting = true;
@@ -585,9 +658,21 @@ export default {
         if (this.formData.projectId) {
           this.loadProjectBranches(this.formData.projectId);
         }
+        this.projectBuildLoading = true;
+        this.loadProjectBuildProject().finally(() => {
+          this.projectBuildLoading = false;
+        });
         this.id = res.data.id;
         this.initLoading = false;
       });
+    },
+    changeProjectBuild(value) {
+      let projectBuild = this.projectBuilds.find((i) => {
+        return i.id === value;
+      });
+      if (projectBuild) {
+        this.$set(this.formData, "parentId", projectBuild.id);
+      }
     },
     loadProjects() {
       return new Promise((resolve, reject) => {
@@ -666,6 +751,11 @@ export default {
     changeDepositoryType() {
       this.searchProjects = this.formData.sourceProjectName;
       this.changeSourceProject(this.formData.sourceProjectName);
+    },
+    changeEnvType() {
+      this.loadProjectBuildProject().finally(() => {
+        this.projectBuildLoading = false;
+      });
     },
     changeSourceProject(value) {
       let project = this.projects.find((i) => {

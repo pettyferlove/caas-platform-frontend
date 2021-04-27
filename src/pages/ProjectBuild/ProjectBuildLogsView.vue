@@ -13,6 +13,7 @@
             class="v-tabs--pill"
             hide-slider
             v-bind="$attrs"
+            @change="loadStep"
           >
             <v-tab
               v-for="(tab, i) in step"
@@ -66,7 +67,9 @@ export default {
       stepDict: {
         "git-pull": "拉取代码（Git）",
         "svn-pull": "拉取代码（Subversion）",
+        "pre-shell": "执行前置脚本",
         "maven-build": "Maven构建",
+        "post-shell": "执行后置脚本",
         "nodejs-build": "NodeJS构建",
         "docker-build": "Docker镜像构建",
         persistence: "持久化构建产物",
