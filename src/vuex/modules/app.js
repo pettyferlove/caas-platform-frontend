@@ -48,7 +48,7 @@ const mutations = {
       return i.id === state.currentNamespace.id;
     });
     if (!currentNamespace) {
-      if (data.length === 1) {
+      if (data.length > 0) {
         state.currentNamespace = data[0];
       } else {
         state.currentNamespace = {};

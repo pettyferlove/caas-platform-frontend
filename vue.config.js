@@ -144,6 +144,13 @@ module.exports = {
       })
       .end();
 
+    config.module
+      .rule("markdown")
+      .test(/\.md$/)
+      .use("raw-loader")
+      .loader("raw-loader")
+      .end();
+
     config
       // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === "development", (config) =>

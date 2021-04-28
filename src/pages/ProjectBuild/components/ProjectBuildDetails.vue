@@ -9,7 +9,7 @@
         "
         color="warning"
         class="px-5 py-3"
-        title="新增"
+        :title="operaType === `add` ? '新增' : '修改'"
       >
         <v-skeleton-loader
           transition="fade-transition"
@@ -385,6 +385,8 @@
         </v-skeleton-loader>
       </material-card>
     </v-col>
+
+    <Document document-name="ProjectBuild.md"></Document>
   </v-row>
 </template>
 
@@ -394,10 +396,11 @@ import MaterialCard from "@components/card/MaterialCard";
 import { mapGetters } from "vuex";
 import EnvironmentType from "@components/base/EnvironmentType";
 import ShellEditor from "@components/editer/ShellEditor";
+import Document from "@/pages/components/Document";
 
 export default {
   name: "ProjectBuildDetails",
-  components: { ShellEditor, EnvironmentType, MaterialCard },
+  components: { Document, ShellEditor, EnvironmentType, MaterialCard },
   props: {
     operaType: {
       type: String,
@@ -649,22 +652,26 @@ export default {
     },
     loadDetail() {
       this.initLoading = true;
-      api.projectBuild.get(this.id).then((res) => {
-        let data = res.data;
-        this.formData = data;
-        if (data.depositoryType === `gitlab_v4`) {
-          this.searchProjects = data.sourceProjectName;
-        }
-        if (this.formData.projectId) {
-          this.loadProjectBranches(this.formData.projectId);
-        }
-        this.projectBuildLoading = true;
-        this.loadProjectBuildProject().finally(() => {
-          this.projectBuildLoading = false;
+      api.projectBuild
+        .get(this.id)
+        .then((res) => {
+          let data = res.data;
+          this.formData = data;
+          if (data.depositoryType === `gitlab_v4`) {
+            this.searchProjects = data.sourceProjectName;
+          }
+          if (this.formData.projectId) {
+            this.loadProjectBranches(this.formData.projectId);
+          }
+          this.projectBuildLoading = true;
+          this.loadProjectBuildProject().finally(() => {
+            this.projectBuildLoading = false;
+          });
+          this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
         });
-        this.id = res.data.id;
-        this.initLoading = false;
-      });
     },
     changeProjectBuild(value) {
       let projectBuild = this.projectBuilds.find((i) => {

@@ -15,7 +15,9 @@
           :loading="initLoading"
         >
           <v-form ref="form">
-            <v-subheader> GitLab配置 </v-subheader>
+            <div class="subtitle">
+              <v-icon slot="icon"> mdi-git </v-icon>GitLab配置
+            </div>
             <v-divider style="margin-bottom: 20px"></v-divider>
 
             <v-text-field
@@ -58,7 +60,10 @@
               </v-btn>
             </v-card-actions>
 
-            <v-subheader> Subversion配置（可选） </v-subheader>
+            <div class="subtitle">
+              <v-icon slot="icon"> mdi-source-repository </v-icon
+              >Subversion配置（可选）
+            </div>
             <v-divider style="margin-bottom: 20px"></v-divider>
 
             <v-text-field
@@ -220,4 +225,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="sass">
+.subtitle
+  i
+    margin-right: 6px
+  align-items: center
+  display: flex
+  height: 48px
+  font-size: 0.875rem
+  font-weight: 400
+  padding: 16px 0
+</style>

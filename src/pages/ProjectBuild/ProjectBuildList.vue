@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <material-card
-        icon="mdi-history"
+        icon="mdi-apache-kafka"
         color="warning"
         class="px-5 py-3"
         title="项目构建"

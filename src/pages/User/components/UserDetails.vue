@@ -286,10 +286,16 @@ export default {
       });
     },
     loadDetail() {
-      api.user.get(this.id).then((res) => {
-        this.formData = res.data;
-        this.id = res.data.id;
-      });
+      this.initLoading = true;
+      api.user
+        .get(this.id)
+        .then((res) => {
+          this.formData = res.data;
+          this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
+        });
     },
   },
 };

@@ -276,11 +276,15 @@ export default {
       });
     },
     loadDetail() {
+      this.initLoading = true;
       api.persistentStorage
-        .get(this.currentNamespace.id, this.id)
+        .get(this.id)
         .then((res) => {
           this.formData = res.data;
           this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
         });
     },
     loadStorageClass() {

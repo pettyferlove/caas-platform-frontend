@@ -76,6 +76,7 @@ const actions = {
         state.permissions = [];
         removeLocalStorage("expires_time");
         removeLocalStorage("save_time");
+        removeLocalStorage("current_namespace");
         resolve();
       });
     });

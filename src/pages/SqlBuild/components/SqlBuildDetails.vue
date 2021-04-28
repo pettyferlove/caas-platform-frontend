@@ -303,10 +303,16 @@ export default {
       });
     },
     loadDetail() {
-      api.sqlBuild.get(this.id).then((res) => {
-        this.formData = res.data;
-        this.id = res.data.id;
-      });
+      this.initLoading = true;
+      api.sqlBuild
+        .get(this.id)
+        .then((res) => {
+          this.formData = res.data;
+          this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
+        });
     },
     changeDepositoryType(value) {
       let authTypes = [];

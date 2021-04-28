@@ -9,7 +9,7 @@
         "
         color="warning"
         class="px-5 py-3"
-        title="新增"
+        :title="operaType === `add` ? '新增' : '修改'"
       >
         <v-skeleton-loader
           transition="fade-transition"
@@ -166,10 +166,16 @@ export default {
   },
   methods: {
     loadDetail() {
-      api.config.get(this.id).then((res) => {
-        this.formData = res.data;
-        this.id = res.data.id;
-      });
+      this.initLoading = true;
+      api.config
+        .get(this.id)
+        .then((res) => {
+          this.formData = res.data;
+          this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
+        });
     },
     submit() {
       if (this.$refs.form.validate()) {

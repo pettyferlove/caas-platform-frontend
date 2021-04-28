@@ -9,7 +9,7 @@
         "
         color="warning"
         class="px-5 py-3"
-        title="新增"
+        :title="operaType === `add` ? '新增' : '修改'"
       >
         <v-skeleton-loader
           transition="fade-transition"
@@ -78,28 +78,6 @@
         </v-skeleton-loader>
       </material-card>
     </v-col>
-    <v-speed-dial
-      bottom
-      right
-      fixed
-      open-on-hover
-      transition="slide-y-reverse-transition"
-    >
-      <template v-slot:activator>
-        <v-btn color="blue darken-2" dark fab>
-          <v-icon> mdi-account-circle </v-icon>
-        </v-btn>
-      </template>
-      <v-btn fab dark small color="green">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="indigo">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="red">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-speed-dial>
   </v-row>
 </template>
 
@@ -177,6 +155,7 @@ export default {
   },
   methods: {
     loadDetail() {
+      this.initLoading = true;
       api.applicationDeployment
         .get(this.currentNamespace.id, this.id)
         .then((res) => {
@@ -210,6 +189,9 @@ export default {
             this.$set(this.formData, "mounts", [{}]);
           }
           this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
         });
     },
     resetData(data) {

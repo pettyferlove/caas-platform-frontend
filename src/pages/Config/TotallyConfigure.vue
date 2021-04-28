@@ -71,11 +71,13 @@
 
         <v-stepper-content :step="hasRole('ADMIN') ? '2' : '1'">
           <v-form ref="userForm">
-            <v-subheader> GitLab配置 </v-subheader>
+            <div class="subtitle">
+              <v-icon slot="icon"> mdi-git </v-icon>GitLab配置
+            </div>
             <v-divider style="margin-bottom: 20px"></v-divider>
             <v-text-field
-              :rules="[(v) => !!v || '请填写Gitlab地址']"
-              label="Gitlab地址"
+              :rules="[(v) => !!v || '请填写Gitlab根地址']"
+              label="Gitlab根地址"
               required
               v-model="userFormData.gitlabHomePath"
             ></v-text-field>
@@ -88,20 +90,23 @@
               v-model="userFormData.gitlabApiToken"
             ></v-text-field>
 
-            <v-subheader> Subversion配置（可选） </v-subheader>
+            <div class="subtitle">
+              <v-icon slot="icon"> mdi-source-repository </v-icon
+              >Subversion配置（可选）
+            </div>
             <v-divider style="margin-bottom: 20px"></v-divider>
 
             <v-text-field
               label="Subversion用户名"
               required
-              v-model="formData.subversionUsername"
+              v-model="userFormData.subversionUsername"
             ></v-text-field>
 
             <v-text-field
               label="Subversion用户密码"
               required
               type="password"
-              v-model="formData.subversionPassword"
+              v-model="userFormData.subversionPassword"
             ></v-text-field>
           </v-form>
           <v-btn
@@ -155,23 +160,26 @@
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
+    <Document document-name="TotallyConfigure.md"></Document>
   </div>
 </template>
 
 <script>
 import api from "@/api";
 import { mapGetters } from "vuex";
+import Document from "@/pages/components/Document";
 
 export default {
   name: "TotallyConfigure",
+  components: { Document },
   data: () => {
     return {
       step: 1,
       submitting: false,
-      globalFormData: {
+      globalFormData: {},
+      userFormData: {
         gitlabHomePath: "http://gitlab.ggjs.sinobest.cn/",
       },
-      userFormData: {},
       namespaceFormData: {
         istio: true,
       },
@@ -219,30 +227,42 @@ export default {
             userConfiguration: this.userFormData,
             namespace: this.namespaceFormData,
           };
-          api.user.initConfig(initData).then(() => {
-            that.$store
-              .dispatch("CheckConfig")
-              .then(() => {
-                that.$notify({
-                  group: "default",
-                  position: "top",
-                  duration: 5000,
-                  speed: 100,
-                  type: "success",
-                  title: "设置成功，可以尽情试用CaaS平台了",
+          api.user
+            .initConfig(initData)
+            .then(() => {
+              that.$store
+                .dispatch("CheckConfig")
+                .then(() => {
+                  that.$notify({
+                    group: "default",
+                    position: "top",
+                    duration: 5000,
+                    speed: 100,
+                    type: "success",
+                    title: "设置成功，可以尽情试用CaaS平台了",
+                  });
+                  that.$store.dispatch("LoadNamespaces");
+                  that.$router
+                    .push({
+                      name: "Main",
+                    })
+                    .catch(() => {});
+                })
+                .catch((error) => {
+                  that.$notify({
+                    group: "default",
+                    type: "error",
+                    title: error.message ? error.message : "服务异常",
+                  });
                 });
-                that.$store.dispatch("LoadNamespaces");
-                that.$router
-                  .push({
-                    name: "Main",
-                  })
-                  .catch(() => {});
-              })
-              .catch((error) => {
-                that.errorMsg =
-                  error.message === "" ? "服务异常" : error.message;
+            })
+            .catch((error) => {
+              that.$notify({
+                group: "default",
+                type: "error",
+                title: error.message ? error.message : "服务异常",
               });
-          });
+            });
           that.submitting = false;
         } else {
           that.submitting = false;
@@ -253,4 +273,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="sass">
+.subtitle
+  i
+    margin-right: 6px
+  align-items: center
+  display: flex
+  height: 48px
+  font-size: 0.875rem
+  font-weight: 400
+  padding: 16px 0
+</style>
