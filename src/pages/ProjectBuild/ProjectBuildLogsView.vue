@@ -30,11 +30,11 @@
 
             <v-tabs-items vertical v-model="selectTab">
               <v-tab-item v-for="(tab, i) in step" :key="i">
-                <logs
+                <Logs
                   :pod-name="podName"
                   :step="tab.name"
                   :namespace-id="namespaceId"
-                ></logs>
+                ></Logs>
               </v-tab-item>
             </v-tabs-items>
           </v-tabs>

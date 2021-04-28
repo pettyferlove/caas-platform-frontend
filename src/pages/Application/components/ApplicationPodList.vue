@@ -28,15 +28,50 @@
                 {{ formatDate(item.startTime) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-btn icon color="green" @click="handlerLog(item)">
-                  <v-icon small>mdi-form-select</v-icon>
-                </v-btn>
-                <v-btn icon color="cyan" @click="handlerShell(item)">
-                  <v-icon small>mdi-powershell</v-icon>
-                </v-btn>
-                <v-btn icon color="pink" @click="handlerDelete(item)">
-                  <v-icon small>mdi-delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="green"
+                      @click="handlerLog(item)"
+                    >
+                      <v-icon small>mdi-form-select</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>查看运行日志</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="cyan"
+                      @click="handlerShell(item)"
+                    >
+                      <v-icon small>mdi-powershell</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>命令行</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="pink"
+                      @click="handlerDelete(item)"
+                    >
+                      <v-icon small>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>删除实例</span>
+                </v-tooltip>
               </template>
             </v-data-table>
           </div>
@@ -116,9 +151,6 @@ export default {
         this.loadData();
       }
     },
-    currentNamespace() {
-      this.loadData();
-    },
   },
   mounted() {
     this.initLoading = true;
@@ -168,7 +200,7 @@ export default {
       this.$router.push({
         name: "ApplicationPodLogsView",
         params: {
-          namespaceId: this.namespaceId,
+          namespace: this.namespaceId,
           name: item.name,
         },
       });

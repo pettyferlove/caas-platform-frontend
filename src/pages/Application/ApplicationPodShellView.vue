@@ -116,7 +116,7 @@ export default {
       this.term.focus();
     },
     error() {
-      this.term.write("");
+      this.term.write("session close!");
     },
     onMessage(message) {
       this.term.write(message.data);

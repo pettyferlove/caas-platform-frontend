@@ -67,15 +67,50 @@
                 <span>{{ item.replicas + "/" + item.readyReplicas }}</span>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-btn icon color="green" @click="handlerView(item)">
-                  <v-icon small>mdi-eye</v-icon>
-                </v-btn>
-                <v-btn icon color="cyan" @click="handlerModify(item)">
-                  <v-icon small>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon color="pink" @click="handlerDelete(item)">
-                  <v-icon small>mdi-delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="green"
+                      @click="handlerView(item)"
+                    >
+                      <v-icon small>mdi-eye</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>查看运行详情</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="cyan"
+                      @click="handlerModify(item)"
+                    >
+                      <v-icon small>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>编辑应用</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="pink"
+                      @click="handlerDelete(item)"
+                    >
+                      <v-icon small>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>删除应用</span>
+                </v-tooltip>
               </template>
             </v-data-table>
           </div>

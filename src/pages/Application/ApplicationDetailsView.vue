@@ -46,7 +46,7 @@
                 镜像名称：{{ detail.imageName ? detail.imageName : "" }}
               </v-col>
               <v-col>
-                标签：{{ detail.imageTag ? detail.imageTag : "" }}
+                镜像版本：{{ detail.imageTag ? detail.imageTag : "" }}
               </v-col>
             </v-row>
 
@@ -119,10 +119,16 @@ export default {
   },
   methods: {
     loadDetail() {
-      api.applicationDeployment.get(this.namespaceId, this.id).then((res) => {
-        this.data = res.data;
-        this.id = res.data.id;
-      });
+      this.initLoading = true;
+      api.applicationDeployment
+        .get(this.namespaceId, this.id)
+        .then((res) => {
+          this.data = res.data;
+          this.id = res.data.id;
+        })
+        .finally(() => {
+          this.initLoading = false;
+        });
     },
     back() {
       this.$router.push({
