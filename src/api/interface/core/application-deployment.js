@@ -31,5 +31,23 @@ const applicationDeployment = {
       baseUrl + "/core/application-deployment/" + namespace + "/" + params
     );
   },
+  shutdown(namespace, name) {
+    return Http.Post(
+      baseUrl +
+        `/core/application-deployment/action/shutdown/${namespace}/${name}`
+    );
+  },
+  start(namespace, name) {
+    return Http.Post(
+      baseUrl + `/core/application-deployment/action/start/${namespace}/${name}`
+    );
+  },
+  scale(namespace, name, params) {
+    return Http.Post(
+      baseUrl +
+        `/core/application-deployment/action/scale/${namespace}/${name}`,
+      params
+    );
+  },
 };
 export { applicationDeployment };

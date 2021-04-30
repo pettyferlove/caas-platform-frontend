@@ -18,7 +18,7 @@
 
     <v-subheader> 环境变量 </v-subheader>
     <v-scale-transition
-      v-for="(item, index) in formData.localEnvironmentVariable"
+      v-for="(item, index) in formData.environmentVariable"
       v-bind:key="`environment-variable-` + index"
     >
       <v-row>
@@ -523,13 +523,13 @@ export default {
       });
     },
     addEnvironmentVariable(index) {
-      this.formData.localEnvironmentVariable.splice(index + 1, 0, {});
+      this.formData.environmentVariable.splice(index + 1, 0, {});
     },
     removeEnvironmentVariable(index) {
-      if (this.formData.localEnvironmentVariable.length === 1) {
+      if (this.formData.environmentVariable.length === 1) {
         return;
       }
-      this.formData.localEnvironmentVariable.splice(index, 1);
+      this.formData.environmentVariable.splice(index, 1);
     },
     addMount(index) {
       this.formData.mounts.splice(index + 1, 0, {});

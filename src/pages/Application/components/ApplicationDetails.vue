@@ -54,13 +54,33 @@
                 v-model="formData"
               ></ApplicationAdvanced>
 
-              <v-btn color="primary" @click="nextStep(2)"> 下一步 </v-btn>
+              <v-btn :loading="submitting" color="primary" @click="nextStep(2)">
+                下一步
+              </v-btn>
               <v-btn color="primary" @click="step = 1"> 上一步 </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
 
-            <v-stepper-step step="3"> 网络设置 </v-stepper-step>
+            <v-stepper-step :complete="step > 3" step="3">
+              应用探针
+            </v-stepper-step>
             <v-stepper-content step="3">
+              <ApplicationProbe
+                ref="probe"
+                class="stepper-content"
+                :opera-type="operaType"
+                v-model="formData"
+              ></ApplicationProbe>
+
+              <v-btn :loading="submitting" color="primary" @click="nextStep(3)">
+                下一步
+              </v-btn>
+              <v-btn color="primary" @click="step = 2"> 上一步 </v-btn>
+              <v-btn text @click="back"> 返回 </v-btn>
+            </v-stepper-content>
+
+            <v-stepper-step step="4"> 网络设置 </v-stepper-step>
+            <v-stepper-content step="4">
               <ApplicationNetwork
                 ref="network"
                 class="stepper-content"
@@ -68,10 +88,10 @@
                 v-model="formData"
               ></ApplicationNetwork>
 
-              <v-btn color="primary" @click="nextStep(3)">
+              <v-btn :loading="submitting" color="primary" @click="nextStep(4)">
                 {{ operaType === "add" ? "提交" : "更新" }}
               </v-btn>
-              <v-btn color="primary" @click="step = 2"> 上一步 </v-btn>
+              <v-btn color="primary" @click="step = 3"> 上一步 </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
           </v-stepper>
@@ -89,9 +109,11 @@ import ApplicationInfo from "@/pages/Application/components/components/Applicati
 import ApplicationAdvanced from "@/pages/Application/components/components/ApplicationAdvanced";
 import ApplicationNetwork from "@/pages/Application/components/components/ApplicationNetwork";
 import utils from "@/libs/utils";
+import ApplicationProbe from "@/pages/Application/components/components/ApplicationProbe";
 export default {
   name: "ApplicationDetails",
   components: {
+    ApplicationProbe,
     ApplicationNetwork,
     ApplicationAdvanced,
     ApplicationInfo,
@@ -110,9 +132,7 @@ export default {
       initLoading: false,
       submitting: false,
       defaultData: {
-        environmentVariable: "",
-        ports: "",
-        localEnvironmentVariable: [{}],
+        environmentVariable: [{}],
         mounts: [{}],
         instancesNumber: 1,
         imagePullStrategy: "Always",
@@ -123,7 +143,25 @@ export default {
         envType: 1,
         network: "internal",
         networkType: "NodePort",
-        localPorts: [{ protocol: "TCP" }],
+        ports: [{ protocol: "TCP" }],
+        openReadinessProbe: false,
+        openLivenessProbe: false,
+        readinessProbe: {
+          probes: [{ strategyType: "HTTPGet" }],
+          initialDelaySeconds: 30,
+          periodSeconds: 10,
+          timeoutSeconds: 10,
+          successThreshold: 1,
+          failureThreshold: 3,
+        },
+        livenessProbe: {
+          probes: [{ strategyType: "HTTPGet" }],
+          initialDelaySeconds: 30,
+          periodSeconds: 10,
+          timeoutSeconds: 10,
+          successThreshold: 1,
+          failureThreshold: 3,
+        },
       },
       formData: {},
       types: {
@@ -160,29 +198,57 @@ export default {
         .get(this.currentNamespace.id, this.id)
         .then((res) => {
           this.formData = res.data;
-          if (this.formData.externalIp) {
-            this.formData.externalIpSelect = this.formData.externalIp.split(
-              ","
-            );
+          if (res.data.externalIp) {
+            this.formData.externalIp = res.data.externalIp.split(",");
           }
-          if (this.formData.environmentVariable) {
+          if (res.data.environmentVariable) {
             this.$set(
               this.formData,
-              "localEnvironmentVariable",
-              JSON.parse(this.formData.environmentVariable)
+              "environmentVariable",
+              JSON.parse(res.data.environmentVariable)
             );
           } else {
-            this.$set(this.formData, "localEnvironmentVariable", [{}]);
+            this.$set(this.formData, "environmentVariable", [{}]);
           }
 
-          if (this.formData.ports) {
+          if (res.data.ports) {
+            this.$set(this.formData, "ports", JSON.parse(res.data.ports));
+          } else {
+            this.$set(this.formData, "ports", [{ protocol: "TCP" }]);
+          }
+
+          if (res.data.readinessProbe) {
             this.$set(
               this.formData,
-              "localPorts",
-              JSON.parse(this.formData.ports)
+              "readinessProbe",
+              JSON.parse(res.data.readinessProbe)
             );
           } else {
-            this.$set(this.formData, "localPorts", [{ protocol: "TCP" }]);
+            this.$set(this.formData, "readinessProbe", {
+              probes: [{ strategyType: "HTTPGet" }],
+              initialDelaySeconds: 30,
+              periodSeconds: 10,
+              timeoutSeconds: 10,
+              successThreshold: 1,
+              failureThreshold: 3,
+            });
+          }
+
+          if (res.data.livenessProbe) {
+            this.$set(
+              this.formData,
+              "livenessProbe",
+              JSON.parse(res.data.livenessProbe)
+            );
+          } else {
+            this.$set(this.formData, "livenessProbe", {
+              probes: [{ strategyType: "HTTPGet" }],
+              initialDelaySeconds: 30,
+              periodSeconds: 10,
+              timeoutSeconds: 10,
+              successThreshold: 1,
+              failureThreshold: 3,
+            });
           }
 
           if (!this.formData.mounts) {
@@ -205,6 +271,24 @@ export default {
         name: "ApplicationList",
       });
     },
+    processData(data) {
+      if (data.externalIp) {
+        data.externalIp = data.externalIp.join(",");
+      }
+      if (data.environmentVariable) {
+        data.environmentVariable = JSON.stringify(data.environmentVariable);
+      }
+      if (data.ports) {
+        data.ports = JSON.stringify(data.ports);
+      }
+      if (data.readinessProbe) {
+        data.readinessProbe = JSON.stringify(data.readinessProbe);
+      }
+      if (data.livenessProbe) {
+        data.livenessProbe = JSON.stringify(data.livenessProbe);
+      }
+      return data;
+    },
     nextStep(value) {
       let that = this;
       that.submitting = true;
@@ -225,23 +309,19 @@ export default {
         }
       }
       if (value === 3) {
+        if (that.$refs.probe.validate()) {
+          that.step = 4;
+          that.submitting = false;
+        } else {
+          that.submitting = false;
+        }
+      }
+      if (value === 4) {
         if (that.$refs.network.validate()) {
           if (that.operaType === "add" && that.id === "") {
-            if (that.formData.externalIpSelect) {
-              that.formData.externalIp = that.formData.externalIpSelect.join(
-                ","
-              );
-            }
-            if (that.formData.localEnvironmentVariable) {
-              that.formData.environmentVariable = JSON.stringify(
-                that.formData.localEnvironmentVariable
-              );
-            }
-            if (that.formData.localPorts) {
-              that.formData.ports = JSON.stringify(that.formData.localPorts);
-            }
+            let data = this.processData(utils.deepClone(that.formData));
             api.applicationDeployment
-              .create(that.currentNamespace.id, that.formData)
+              .create(that.currentNamespace.id, data)
               .then(() => {
                 that.$notify({
                   group: "default",
@@ -263,21 +343,9 @@ export default {
                 that.submitting = false;
               });
           } else {
-            if (that.formData.externalIpSelect) {
-              that.formData.externalIp = that.formData.externalIpSelect.join(
-                ","
-              );
-            }
-            if (that.formData.localEnvironmentVariable) {
-              that.formData.environmentVariable = JSON.stringify(
-                that.formData.localEnvironmentVariable
-              );
-            }
-            if (that.formData.localPorts) {
-              that.formData.ports = JSON.stringify(that.formData.localPorts);
-            }
+            let data = this.processData(utils.deepClone(that.formData));
             api.applicationDeployment
-              .update(that.currentNamespace.id, that.formData)
+              .update(that.currentNamespace.id, data)
               .then(() => {
                 that.$notify({
                   group: "default",
@@ -300,7 +368,7 @@ export default {
               });
           }
         } else {
-          that.submitting = true;
+          that.submitting = false;
         }
       }
     },

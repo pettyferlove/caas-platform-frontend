@@ -10,6 +10,7 @@ import "codemirror/addon/lint/lint.css";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/darcula.css";
 import "codemirror/mode/yaml/yaml";
+import "codemirror/mode/textile/textile";
 import "codemirror/mode/properties/properties";
 import "codemirror/addon/lint/lint";
 import "codemirror/addon/lint/yaml-lint";

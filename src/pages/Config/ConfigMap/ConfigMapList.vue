@@ -137,11 +137,11 @@
           >
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" @click="deleteTips = false">
+            <v-btn color="green darken-1" text @click="deleteTips = false">
               取消
             </v-btn>
             <v-btn color="error darken-1" @click="deleteConfirm(selectId)">
-              同意
+              确认
             </v-btn>
           </v-card-actions>
         </v-card>

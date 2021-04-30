@@ -58,15 +58,15 @@
             <v-row class="px-4 pt-4 pb-3" no-gutters>
               <v-col>
                 可用实例：{{
-                  detail.availableReplicas ? detail.availableReplicas : ""
+                  detail.availableReplicas ? detail.availableReplicas : "0"
                 }}
               </v-col>
               <v-col>
-                实例总数：{{ detail.replicas ? detail.replicas : "" }}
+                实例总数：{{ detail.replicas ? detail.replicas : "0" }}
               </v-col>
               <v-col>
                 更新数量：{{
-                  detail.updatedReplicas ? detail.updatedReplicas : ""
+                  detail.updatedReplicas ? detail.updatedReplicas : "0"
                 }}
               </v-col>
             </v-row>

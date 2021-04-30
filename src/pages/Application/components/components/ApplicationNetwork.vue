@@ -30,7 +30,7 @@
       ></v-select>
 
       <v-select
-        v-model="formData.externalIpSelect"
+        v-model="formData.externalIp"
         :items="IPs"
         :loading="ipLoading"
         item-text="name"
@@ -53,7 +53,7 @@
         ]"
       ></v-select>
       <v-row
-        v-for="(item, index) in formData.localPorts"
+        v-for="(item, index) in formData.ports"
         v-bind:key="`ports-` + index"
       >
         <v-col cols="12" md="4">
@@ -196,7 +196,7 @@ export default {
       this.isInit = false;
     },
     validate() {
-      if (this.formData.localPorts.length < 1) {
+      if (this.formData.ports.length < 1) {
         return false;
       }
       return this.$refs.form.validate();
@@ -222,13 +222,13 @@ export default {
       });
     },
     addPort(index) {
-      this.formData.localPorts.splice(index + 1, 0, { protocol: "TCP" });
+      this.formData.ports.splice(index + 1, 0, { protocol: "TCP" });
     },
     removePort(index) {
-      if (this.formData.localPorts.length === 1) {
+      if (this.formData.ports.length === 1) {
         return;
       }
-      this.formData.localPorts.splice(index, 1);
+      this.formData.ports.splice(index, 1);
     },
   },
   mounted() {

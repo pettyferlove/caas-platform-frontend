@@ -33,7 +33,7 @@
       :counter="40"
       v-model="formData.name"
       required
-      :rules="[(v) => !!v || '请填写应用名称']"
+      :rules="[(v) => validKey(v) || '请填写应用名称']"
       prepend-icon="mdi-form-textbox"
     ></v-text-field>
 
@@ -269,6 +269,12 @@ export default {
     },
     validate() {
       return this.$refs.form.validate();
+    },
+    validKey(val) {
+      if (val && !/^[a-z0-9_\\-]+$/g.test(val)) {
+        return "只能输入小写英文字符和下划线";
+      }
+      return true;
     },
   },
   computed: {

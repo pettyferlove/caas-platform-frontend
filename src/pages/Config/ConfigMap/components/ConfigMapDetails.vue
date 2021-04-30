@@ -143,6 +143,10 @@ export default {
           value: "yaml",
         },
         {
+          name: "Text",
+          value: "textile",
+        },
+        {
           name: "Properties",
           value: "properties",
         },

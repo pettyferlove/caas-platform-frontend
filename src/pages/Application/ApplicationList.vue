@@ -54,18 +54,23 @@
                 itemsPerPageOptions: [5, 10, 15],
               }"
             >
+              <template v-slot:item.runStatus="{ item }">
+                <RunStatus :state="item.runStatus"></RunStatus>
+              </template>
               <template v-slot:item.envType="{ item }">
                 <EnvironmentType
                   :value="item.envType"
                   type="label"
                 ></EnvironmentType>
               </template>
+
               <template v-slot:item.imagesName="{ item }">
                 {{ item.imageName + ":" + item.imageTag }}
               </template>
               <template v-slot:item.groupStatus="{ item }">
                 <span>{{ item.replicas + "/" + item.readyReplicas }}</span>
               </template>
+
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
@@ -80,6 +85,57 @@
                     </v-btn>
                   </template>
                   <span>查看运行详情</span>
+                </v-tooltip>
+
+                <v-tooltip
+                  bottom
+                  v-if="
+                    item.runStatus === `stopping` ||
+                    item.runStatus === `stopped`
+                  "
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="green"
+                      @click="handlerStart(item)"
+                    >
+                      <v-icon small>mdi-arrow-right-drop-circle-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>启动应用</span>
+                </v-tooltip>
+
+                <v-tooltip bottom v-else>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="red"
+                      @click="handlerShutdown(item)"
+                    >
+                      <v-icon small>mdi-power</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>关闭应用</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      color="green"
+                      @click="handlerScale(item)"
+                    >
+                      <v-icon small>mdi-scale</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>应用缩放</span>
                 </v-tooltip>
 
                 <v-tooltip bottom>
@@ -116,6 +172,67 @@
           </div>
         </v-skeleton-loader>
       </material-card>
+
+      <v-dialog v-model="scaleDialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">缩放资源</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form">
+                <v-row>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      label="当前实例数"
+                      disabled
+                      :value="selectItem.instancesNumber"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      label="目标实例数"
+                      v-model="instancesNumber"
+                      required
+                      :rules="[(v) => validNumber(v) || '请填写目标实例数']"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-form>
+              <v-alert style="padding: 10px 5px" dense type="info" outlined>
+                应用将更新为目标实例数。
+              </v-alert>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="scaleDialog = false">
+              关闭
+            </v-btn>
+            <v-btn color="green darken-1" @click="scaleConfirm(selectId)">
+              缩放
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="deleteTips" persistent max-width="400">
+        <v-card>
+          <v-card-title class="headline"> 是否删除应用？ </v-card-title>
+          <v-card-text
+            >该操作将会删除应用以及关联的服务发现（网络）设置，该操作不可撤销</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="deleteTips = false">
+              取消
+            </v-btn>
+            <v-btn color="error darken-1" @click="deleteConfirm(selectId)">
+              确认
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -125,12 +242,18 @@ import { mapGetters } from "vuex";
 import MaterialCard from "@components/card/MaterialCard";
 import api from "@/api";
 import EnvironmentType from "@components/base/EnvironmentType";
+import RunStatus from "@/pages/components/Application/RunStatus";
 
 export default {
   name: "Application",
-  components: { EnvironmentType, MaterialCard },
+  components: { RunStatus, EnvironmentType, MaterialCard },
   data: () => {
     return {
+      deleteTips: false,
+      scaleDialog: false,
+      selectId: "",
+      instancesNumber: 0,
+      selectItem: {},
       initLoading: false,
       loading: false,
       total: 0,
@@ -150,16 +273,17 @@ export default {
         {
           text: "名称",
           align: "start",
-          width: 250,
+          width: 200,
           value: "name",
         },
+        { text: "运行状态", align: "center", value: "runStatus" },
         {
           text: "环境",
           align: "center",
           value: "envType",
         },
         { text: "容器组状态", align: "center", value: "groupStatus" },
-        { text: "镜像名称", value: "imagesName" },
+        { text: "镜像信息", value: "imagesName" },
         { text: "创建时间", align: "center", value: "createTime" },
         { text: "更新时间", align: "center", value: "modifyTime" },
         {
@@ -167,7 +291,7 @@ export default {
           value: "actions",
           sortable: false,
           align: "end",
-          width: 200,
+          width: 220,
         },
       ],
       datasets: [],
@@ -238,6 +362,44 @@ export default {
         }
       });
     },
+    handlerShutdown(item) {
+      api.applicationDeployment
+        .shutdown(this.currentNamespace.id, item.id)
+        .then(() => {
+          this.$notify({
+            group: "default",
+            type: "success",
+            title: "关闭成功",
+          });
+          this.loadData();
+        })
+        .catch(() => {
+          this.$notify({
+            group: "default",
+            type: "error",
+            title: "关闭失败",
+          });
+        });
+    },
+    handlerStart(item) {
+      api.applicationDeployment
+        .start(this.currentNamespace.id, item.id)
+        .then(() => {
+          this.$notify({
+            group: "default",
+            type: "success",
+            title: "启动成功",
+          });
+          this.loadData();
+        })
+        .catch(() => {
+          this.$notify({
+            group: "default",
+            type: "error",
+            title: "启动失败",
+          });
+        });
+    },
     handlerView(item) {
       this.$router.push({
         name: "ApplicationDetailsView",
@@ -258,6 +420,36 @@ export default {
         name: "ApplicationDetailsAdd",
       });
     },
+    handlerScale(item) {
+      this.selectId = item.id;
+      this.scaleDialog = true;
+      this.selectItem = item;
+      this.instancesNumber = item.instancesNumber;
+    },
+    scaleConfirm(selectId) {
+      if (this.$refs.form.validate()) {
+        api.applicationDeployment
+          .scale(this.currentNamespace.id, selectId, {
+            number: this.instancesNumber,
+          })
+          .then(() => {
+            this.loadData();
+            this.scaleDialog = false;
+            this.$notify({
+              group: "default",
+              type: "success",
+              title: "缩放成功",
+            });
+          })
+          .catch(() => {
+            this.$notify({
+              group: "default",
+              type: "error",
+              title: "缩放失败",
+            });
+          });
+      }
+    },
     handlerModify(item) {
       this.$router.push({
         name: "ApplicationDetailsEdit",
@@ -267,15 +459,20 @@ export default {
       });
     },
     handlerDelete(item) {
+      this.selectId = item.id;
+      this.deleteTips = true;
+    },
+    deleteConfirm(selectId) {
       api.applicationDeployment
-        .delete(this.currentNamespace.id, item.id)
+        .delete(this.currentNamespace.id, selectId)
         .then(() => {
+          this.loadData();
+          this.deleteTips = false;
           this.$notify({
             group: "default",
             type: "success",
             title: "删除成功",
           });
-          this.loadData();
         })
         .catch(() => {
           this.$notify({
@@ -284,6 +481,12 @@ export default {
             title: "删除失败",
           });
         });
+    },
+    validNumber(val) {
+      if (!val || !/^[0-9_\\-]+$/g.test(val)) {
+        return "请输入正确的数量";
+      }
+      return true;
     },
   },
 };

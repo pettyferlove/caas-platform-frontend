@@ -314,10 +314,10 @@
               </template>
 
               <template v-if="formData.dockerfileAlreadyExists === 0">
-                <!--              <v-row>
+                <!--                <v-row>
                   <v-col cols="12" md="6">
                     <v-autocomplete
-                      v-model="formData.basicImage"
+                      v-model="dockerfile.baseImage"
                       :items="repository"
                       :loading="repositoryLoading"
                       :search-input.sync="searchRepository"
@@ -331,7 +331,7 @@
                   </v-col>
                   <v-col cols="12" md="6">
                     <v-select
-                      v-model="formData.imageTag"
+                      v-model="dockerfile.baseImageTag"
                       :items="imageTags"
                       :loading="tagsLoading"
                       item-text="name"
@@ -340,9 +340,9 @@
                       prepend-icon="mdi-wrench"
                     ></v-select>
                   </v-col>
-                </v-row>-->
+                </v-row>
 
-                <!--<v-text-field
+                <v-text-field
                   label="操作命令"
                   value="example"
                   prefix="RUN "
@@ -421,6 +421,10 @@ export default {
         needBuildImage: 1,
         envType: 1,
       },
+      // dockerfile: {
+      //   baseImage: "",
+      //   baseImageTag: "",
+      // },
       projectBuildLoading: false,
       projects: [],
       projectBuilds: [],
