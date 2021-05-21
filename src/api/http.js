@@ -9,7 +9,7 @@ import api from "@/api";
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded; charset=UTF-8";
 // axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.timeout = 60000;
+axios.defaults.timeout = 300000;
 axios.defaults.withCredentials = true;
 
 /*是否有请求正在刷新token*/

@@ -1,3 +1,6 @@
+# 目录
+[toc]
+
 # 项目构建
 
 > 该文档会随着系统的更新完善同步更新
@@ -13,10 +16,10 @@
 ## 2.安全说明
 
 * Git源码仓库
-  
+
   >  Git采用RSA&SSH的方式获取项目源码，过程中**不会泄露**用户密码等数据
 * SVN源码仓库
-  
+
   > SVN目前只支持明文密码传输，过程中**可能会泄露**用户名密码等数据
 
 ## 3.构建命令&构建参数
@@ -85,3 +88,40 @@ fi
 | $REMOTE_SERVER                  | CAAS集群服务根URL | URL包含CAAS平台集群下的任意一台机器的IP+端口，可通过URL配置相应API路径访问开放资源 |
 | $PARENT_PROJECT_LAST_BUILD_FILE | 父项目最后一次构建的构建产物文件ID |  |
 | $FILE_ID | 当前构建的构建产物文件ID | 当打开持久化储存时，该ID生效 |
+
+## 7.Dockerfile
+### 指令说明
+ * FROM：定制的镜像都是基于 FROM 的镜像
+   > 如果需要使用Nginx镜像则 FROM nginx:latest，nginx镜像将作为你运行的基础
+ * RUN：用于执行后面跟着的命令行命令
+   > RUN 等同于执行Shell命令，在docker build过程中执行
+ * ENV：设置环境变量
+ * ARG：构建参数，与 ENV 作用一至
+   > 作用域不一样。ARG 设置的环境变量仅对 Dockerfile 内有效，也就是说只有 docker build 的过程中有效，构建好的镜像内不存在此环境变量。 构建命令 docker build 中可以用 --build-arg <参数名>=<值> 来覆盖。
+ * VOLUME：定义匿名数据卷
+   > 在启动容器时忘记挂载数据卷，会自动挂载到匿名卷
+
+   作用
+   * 避免重要的数据，因容器重启而丢失，这是非常致命的。
+   * 避免容器不断变大。
+
+ * EXPOSE：声明端口
+ * WORKDIR：工作目录
+   > 用 WORKDIR 指定的工作目录，会在构建镜像的每一层中都存在。（WORKDIR 指定的工作目录，必须是提前创建好的）。
+ * COPY：复制文件命令
+   > 从上下文目录复制文件到镜像中，注意上下文目录指的是项目根目录
+ * CMD：类似于 RUN 指令，用于运行程序
+   > 运行命令行，区别于RUN，CMD会在docker run 过程中执行
+ * ENTRYPOINT：类似于 CMD 指令
+   > 但其不会被 docker run 的命令行参数指定的指令所覆盖，而且这些命令行参数会被当作参数送给 ENTRYPOINT 指令指定的程序。如果运行 docker run 时使用了 --entrypoint 选项，将覆盖 CMD 指令指定的程序。
+### 示例
+```dockerfile
+FROM centos
+RUN yum install wget
+RUN wget -O redis.tar.gz "http://download.redis.io/releases/redis-5.0.3.tar.gz"
+RUN tar -xvf redis.tar.gz
+FROM centos
+RUN yum install wget \
+    && wget -O redis.tar.gz "http://download.redis.io/releases/redis-5.0.3.tar.gz" \
+    && tar -xvf redis.tar.gz
+```

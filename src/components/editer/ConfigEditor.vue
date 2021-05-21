@@ -12,6 +12,7 @@ import "codemirror/theme/darcula.css";
 import "codemirror/mode/yaml/yaml";
 import "codemirror/mode/textile/textile";
 import "codemirror/mode/properties/properties";
+import "codemirror/mode/dockerfile/dockerfile";
 import "codemirror/addon/lint/lint";
 import "codemirror/addon/lint/yaml-lint";
 
@@ -72,7 +73,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .editor {
   height: 100%;
   width: 100%;
@@ -80,12 +81,13 @@ export default {
 }
 
 .editor >>> .CodeMirror {
-  height: auto;
-  min-height: 500px;
+  height: 700px;
+  overflow: auto;
+  min-height: 700px;
 }
 
 .editor >>> .CodeMirror-scroll {
-  min-height: 500px;
+  min-height: 700px;
 }
 
 .editor >>> .cm-s-rubyblue span.cm-string {

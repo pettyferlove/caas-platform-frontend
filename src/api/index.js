@@ -18,9 +18,15 @@ import { persistentStorage } from "./interface/core/persistent-storage";
 /*Engine*/
 import { deployment } from "./interface/engine/kubernetes/deployment";
 import { node } from "./interface/engine/kubernetes/node";
+import { daemonSet } from "./interface/engine/kubernetes/daemon-set";
+import { ingress } from "./interface/engine/kubernetes/ingress";
+import { secret } from "./interface/engine/kubernetes/secret";
+import { service } from "./interface/engine/kubernetes/service";
+import { statefulSet } from "./interface/engine/kubernetes/stateful-set";
 import { storageClass } from "./interface/engine/kubernetes/storage-class";
 import { gitlabProject } from "./interface/engine/gitlab/project";
 import { harborRegister } from "./interface/engine/docker/register/harbor";
+import { appCenter } from "./interface/engine/appcenter/app-center";
 
 /*System*/
 import { buildFile } from "./interface/system/build-file";
@@ -36,6 +42,11 @@ export default {
   node,
   storageClass,
   pod,
+  daemonSet,
+  ingress,
+  secret,
+  service,
+  statefulSet,
   persistentStorage,
   globalConfiguration,
   userConfiguration,
@@ -48,4 +59,5 @@ export default {
   imagesDepository,
   gitlabProject,
   harborRegister,
+  appCenter,
 };

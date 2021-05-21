@@ -42,6 +42,12 @@ let menuData = [
     role: "USER",
   },
   {
+    icon: "mdi-apps-box",
+    text: "应用中心",
+    path: "/app-center",
+    role: "USER",
+  },
+  {
     icon: "mdi-semantic-web",
     text: "服务治理",
     path: "/service-governance",

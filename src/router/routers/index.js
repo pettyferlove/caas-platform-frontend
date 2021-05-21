@@ -7,6 +7,7 @@ import application from "@/router/routers/application";
 import configMap from "@/router/routers/config-map";
 import serviceDiscovery from "@/router/routers/service-discovery";
 import persistentStorage from "@/router/routers/persistent-storage";
+import appCenter from "@/router/routers/app-center";
 
 import user from "@/router/routers/user";
 
@@ -43,6 +44,7 @@ export const mainRouter = {
     .concat(serviceDiscovery)
     .concat(resources)
     .concat(persistentStorage)
+    .concat(appCenter)
     .concat(user),
 };
 

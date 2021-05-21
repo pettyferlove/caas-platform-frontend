@@ -354,7 +354,11 @@
                   prefix="RUN "
                 ></v-text-field>-->
 
-                <v-textarea
+                <ConfigEditor
+                  type="dockerfile"
+                  v-model="formData.dockerfileContent"
+                ></ConfigEditor>
+                <!--                <v-textarea
                   outlined
                   auto-grow
                   v-model="formData.dockerfileContent"
@@ -364,7 +368,7 @@
                   hint="Hint text"
                   :rules="[(v) => !!v || '请编辑Dockerfile']"
                   required
-                ></v-textarea>
+                ></v-textarea>-->
               </template>
             </template>
 
@@ -378,7 +382,6 @@
               >
                 提交
               </v-btn>
-
               <v-btn color="grey" class="mr-4" @click="back"> 返回 </v-btn>
             </v-card-actions>
           </v-form>
@@ -397,10 +400,17 @@ import { mapGetters } from "vuex";
 import EnvironmentType from "@components/base/EnvironmentType";
 import ShellEditor from "@components/editer/ShellEditor";
 import Document from "@/pages/components/Document";
+import ConfigEditor from "@components/editer/ConfigEditor";
 
 export default {
   name: "ProjectBuildDetails",
-  components: { Document, ShellEditor, EnvironmentType, MaterialCard },
+  components: {
+    ConfigEditor,
+    Document,
+    ShellEditor,
+    EnvironmentType,
+    MaterialCard,
+  },
   props: {
     operaType: {
       type: String,
