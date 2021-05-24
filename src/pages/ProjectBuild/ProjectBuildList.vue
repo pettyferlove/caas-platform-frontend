@@ -19,7 +19,15 @@
                 <v-text-field
                   dense
                   v-model="queryParams.projectName"
-                  label="请输入名称"
+                  label="请输入项目名称"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="3">
+                <v-text-field
+                  dense
+                  v-model="queryParams.projectDescribe"
+                  label="请输入项目说明"
                   outlined
                 ></v-text-field>
               </v-col>
@@ -264,6 +272,11 @@ export default {
           text: "名称",
           align: "start",
           value: "projectName",
+        },
+        {
+          text: "说明",
+          align: "start",
+          value: "projectDescribe",
         },
         {
           text: "最后一次构建状态",

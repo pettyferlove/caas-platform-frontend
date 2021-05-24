@@ -29,6 +29,18 @@
               required
             ></v-text-field>
 
+            <v-textarea
+              outlined
+              auto-grow
+              v-model="formData.projectDescribe"
+              name="input-7-1"
+              row-height="20"
+              label="说明"
+              hint="简要介绍"
+              :rules="[(v) => !!v || '请说明信息']"
+              required
+            ></v-textarea>
+
             <v-switch
               v-model="formData.linkProject"
               label="需要关联其他项目？"
