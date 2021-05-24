@@ -252,6 +252,27 @@
         </v-tab-item>
       </v-tabs-items>
     </v-card>
+    <v-dialog v-model="deleteTips" persistent max-width="400">
+      <v-card>
+        <v-card-title class="headline"> 是否删除应用？ </v-card-title>
+        <v-card-text
+          >该操作将会删除应用<strong>全部配置</strong>（持久化存储除外，<strong>持久化存储会一直保存</strong>）</v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="deleteTips = false">
+            取消
+          </v-btn>
+          <v-btn
+            :loading="selectItem.deleting"
+            color="error darken-1"
+            @click="deleteConfirm(selectItem)"
+          >
+            确认
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -262,6 +283,8 @@ export default {
   name: "AppCenterList",
   data: () => {
     return {
+      deleteTips: false,
+      selectItem: {},
       total: 0,
       queryParams: {},
       itemsPerPageArray: [8, 16, 32],
@@ -344,9 +367,10 @@ export default {
           this.loading = false;
         });
     },
-    deleteRelease(item) {
+    deleteConfirm(item) {
       this.$set(item, "deleting", true);
       api.appCenter.delete(item.namespace, item.releaseName).then(() => {
+        this.deleteTips = false;
         this.$notify({
           group: "default",
           type: "success",
@@ -354,6 +378,10 @@ export default {
         });
         this.loadReleases();
       });
+    },
+    deleteRelease(item) {
+      this.deleteTips = true;
+      this.selectItem = item;
     },
     detail(item) {
       this.$router.push({

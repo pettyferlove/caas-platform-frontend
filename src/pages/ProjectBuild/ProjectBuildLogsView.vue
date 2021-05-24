@@ -5,6 +5,7 @@
         <v-card-text>
           <subheading subheading="项目构建日志"></subheading>
           <v-tabs
+            v-if="step.length > 0"
             v-model="selectTab"
             vertical
             :active-class="`success ${
@@ -38,6 +39,9 @@
               </v-tab-item>
             </v-tabs-items>
           </v-tabs>
+          <v-alert v-else border="top" colored-border type="info" elevation="2">
+            暂无日志，构建任务可能已被删除
+          </v-alert>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -94,18 +98,20 @@ export default {
         let step = [];
         this.podName = data.podName;
         this.namespaceId = data.namespaceId;
-        data.step.forEach((i) => {
-          step.push({
-            name: i.name,
-            value: this.stepDict[i.name],
-            ready: i.ready,
+        if (data.step) {
+          data.step.forEach((i) => {
+            step.push({
+              name: i.name,
+              value: this.stepDict[i.name],
+              ready: i.ready,
+            });
           });
-        });
+        }
         this.step = step;
       });
     },
     back() {
-      this.$router.go(-1);
+      this.$router.back();
     },
   },
 };

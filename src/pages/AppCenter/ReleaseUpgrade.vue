@@ -221,7 +221,7 @@ export default {
       }
     },
     back() {
-      this.$router.go(-1);
+      this.$router.back();
     },
     applyModifications(mods, values) {
       if (mods.length) {

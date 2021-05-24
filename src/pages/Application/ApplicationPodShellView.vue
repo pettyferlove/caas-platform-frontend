@@ -145,7 +145,7 @@ export default {
       this.term.dispose();
     },
     back() {
-      this.$router.go(-1);
+      this.$router.back();
     },
   },
   destroyed() {
