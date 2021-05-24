@@ -686,8 +686,8 @@ export default {
           if (data.depositoryType === `gitlab_v4`) {
             this.searchProjects = data.sourceProjectName;
           }
-          if (this.formData.projectId) {
-            this.loadProjectBranches(this.formData.projectId);
+          if (this.formData.remoteProjectId) {
+            this.loadProjectBranches(this.formData.remoteProjectId);
           }
           this.projectBuildLoading = true;
           this.loadProjectBuildProject().finally(() => {
