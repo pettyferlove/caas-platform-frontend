@@ -14,13 +14,13 @@
       @change="changeValue"
     ></v-select>
     <template v-else>
-      <v-chip color="primary" outlined v-if="childValue === 1" class="ma-2">
+      <v-chip color="green" outlined v-if="childValue === 1" class="ma-2">
         开发环境
       </v-chip>
-      <v-chip color="green" outlined v-if="childValue === 2" class="ma-2">
+      <v-chip color="orange" outlined v-if="childValue === 2" class="ma-2">
         测试环境
       </v-chip>
-      <v-chip color="orange" outlined v-if="childValue === 9" class="ma-2">
+      <v-chip color="red" outlined v-if="childValue === 9" class="ma-2">
         生产环境
       </v-chip>
     </template>
