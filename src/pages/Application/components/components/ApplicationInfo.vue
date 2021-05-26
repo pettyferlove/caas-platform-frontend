@@ -125,36 +125,7 @@ export default {
       },
     },
     "formData.imagesDepositoryId"() {
-      this.repositoryLoading = true;
-      api.harborRegister
-        .queryRepository({
-          projectId: this.formData.imagesDepositoryId,
-        })
-        .then((res) => {
-          this.repository = res.data;
-          let depository = this.imagesDepository.find((i) => {
-            return i.projectId === this.formData.imagesDepositoryId;
-          });
-          let imageNameTemp = "";
-          if (this.formData.id) {
-            imageNameTemp = this.formData.imageName.substr(
-              this.formData.imageName.indexOf(depository.projectName),
-              this.formData.imageName.length
-            );
-          } else {
-            imageNameTemp = depository.projectName + "/" + this.formData.name;
-          }
-
-          let defaultRepository = this.repository.find((i) => {
-            return imageNameTemp === i.repositoryName;
-          });
-          this.$set(this.formData, "imageName", defaultRepository.pullUrl);
-          this.changeRepository(defaultRepository.pullUrl);
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.repositoryLoading = false;
-        });
+      this.changeImagesDepository();
     },
     "formData.autoBuildId"() {
       this.projectBuildLoading = true;
@@ -231,6 +202,9 @@ export default {
         });
     },
     changeProjectBuild(value) {
+      this.$set(this.formData, "imagesDepositoryId", "");
+      this.$set(this.formData, "imageName", "");
+      this.$set(this.formData, "imageTag", "");
       let projectBuild = this.projectBuilds.find((i) => {
         return i.id === value;
       });
@@ -249,7 +223,40 @@ export default {
           "imagesDepositoryId",
           projectBuild.imagesDepositoryId
         );
+        this.changeImagesDepository();
       }
+    },
+    changeImagesDepository() {
+      this.repositoryLoading = true;
+      api.harborRegister
+        .queryRepository({
+          projectId: this.formData.imagesDepositoryId,
+        })
+        .then((res) => {
+          this.repository = res.data;
+          let depository = this.imagesDepository.find((i) => {
+            return i.projectId === this.formData.imagesDepositoryId;
+          });
+          let imageNameTemp = "";
+          if (this.formData.id) {
+            imageNameTemp = this.formData.imageName.substr(
+              this.formData.imageName.indexOf(depository.projectName),
+              this.formData.imageName.length
+            );
+          } else {
+            imageNameTemp = depository.projectName + "/" + this.formData.name;
+          }
+
+          let defaultRepository = this.repository.find((i) => {
+            return imageNameTemp === i.repositoryName;
+          });
+          this.$set(this.formData, "imageName", defaultRepository.pullUrl);
+          this.changeRepository(defaultRepository.pullUrl);
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.repositoryLoading = false;
+        });
     },
     changeRepository(value) {
       let selectedRepository = this.repository.find((i) => {

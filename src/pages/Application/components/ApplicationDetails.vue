@@ -18,6 +18,7 @@
           :types="types"
           :loading="initLoading"
           ><v-stepper
+            :elevation="0"
             non-linear
             vertical
             class="stepper-wrapper"
