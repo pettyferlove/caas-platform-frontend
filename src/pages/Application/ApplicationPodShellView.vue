@@ -64,7 +64,9 @@ export default {
       } else {
         // 实例化socket
         this.socket = new WebSocket(
-          "ws://127.0.0.1:8885/api/v1/sockjs/terminal/" +
+          "ws://" +
+            location.host +
+            "/api/v1/sockjs/terminal/" +
             this.namespaceId +
             "/" +
             this.name
