@@ -18,8 +18,11 @@ const persistentStorage = {
   update(params) {
     return Http.PutJSON(baseUrl + "/core/persistent-storage", params);
   },
-  select(namespaceId) {
-    return Http.Get(baseUrl + `/core/persistent-storage/select/${namespaceId}`);
+  select(namespaceId, params) {
+    return Http.Get(
+      baseUrl + `/core/persistent-storage/select/${namespaceId}`,
+      params
+    );
   },
   delete(id) {
     return Http.Delete(baseUrl + `/core/persistent-storage/${id}`);

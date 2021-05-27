@@ -408,6 +408,10 @@ export default {
         }
       },
     },
+    "formData.envType"() {
+      this.loadConfig();
+      this.loadPersistentStorage();
+    },
   },
   model: {
     prop: "value",
@@ -499,9 +503,22 @@ export default {
     loadConfig() {
       return new Promise((resolve, reject) => {
         api.config
-          .select(this.namespace.id)
+          .select(this.namespace.id, {
+            envType: this.formData.envType || 1,
+          })
           .then((res) => {
-            this.configs = res.data || [];
+            if (res.data) {
+              let temp = [];
+              res.data.forEach((i) => {
+                temp.push({
+                  id: i.id,
+                  fileName: i.configName + " / " + i.fileName,
+                });
+              });
+              this.configs = temp;
+            } else {
+              this.configs = [];
+            }
             resolve();
           })
           .catch((err) => {
@@ -512,7 +529,9 @@ export default {
     loadPersistentStorage() {
       return new Promise((resolve, reject) => {
         api.persistentStorage
-          .select(this.namespace.id)
+          .select(this.namespace.id, {
+            envType: this.formData.envType || 1,
+          })
           .then((res) => {
             this.persistentStorages = res.data || [];
             resolve();

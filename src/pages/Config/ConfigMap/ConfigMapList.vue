@@ -69,30 +69,10 @@
                 </span>
               </template>
               <template v-slot:item.envType="{ item }">
-                <v-chip
-                  color="primary"
-                  outlined
-                  v-if="item.envType === 1"
-                  class="ma-2"
-                >
-                  开发环境
-                </v-chip>
-                <v-chip
-                  color="green"
-                  outlined
-                  v-if="item.envType === 2"
-                  class="ma-2"
-                >
-                  测试环境
-                </v-chip>
-                <v-chip
-                  color="orange"
-                  outlined
-                  v-if="item.envType === 9"
-                  class="ma-2"
-                >
-                  生产环境
-                </v-chip>
+                <EnvironmentType
+                  :value="item.envType"
+                  type="label"
+                ></EnvironmentType>
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
@@ -154,9 +134,10 @@
 import MaterialCard from "@components/card/MaterialCard";
 import { mapGetters } from "vuex";
 import api from "@/api";
+import EnvironmentType from "@components/base/EnvironmentType";
 export default {
   name: "ConfigMapList",
-  components: { MaterialCard },
+  components: { EnvironmentType, MaterialCard },
   data: () => {
     return {
       deleteTips: false,
