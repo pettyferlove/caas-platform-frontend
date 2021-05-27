@@ -142,6 +142,7 @@ export default {
         {
           text: "环境",
           align: "center",
+          sortable: false,
           value: "envType",
         },
         { text: "初始容量", align: "center", value: "initSize" },
@@ -207,6 +208,8 @@ export default {
         if (this.currentNamespace.id) {
           api.persistentStorage
             .page(this.currentNamespace.id, {
+              descs: this.sortDesc(this.options),
+              ascs: this.sortAsc(this.options),
               currentPage: this.options.page,
               pageSize: this.options.itemsPerPage,
               ...this.queryParams,

@@ -276,11 +276,13 @@ export default {
         {
           text: "说明",
           align: "start",
+          sortable: false,
           value: "projectDescribe",
         },
         {
           text: "最后一次构建状态",
           align: "start",
+          sortable: false,
           value: "lastState",
         },
         {
@@ -291,12 +293,14 @@ export default {
         {
           text: "环境",
           align: "center",
+          sortable: false,
           value: "envType",
         },
         {
           text: "自动构建",
           value: "openAutoBuild",
           align: "start",
+          sortable: false,
           width: 120,
         },
         { text: "创建时间", value: "createTime" },
@@ -376,6 +380,8 @@ export default {
       return new Promise((resolve, reject) => {
         api.projectBuild
           .page({
+            descs: this.sortDesc(this.options),
+            ascs: this.sortAsc(this.options),
             current: this.options.page,
             size: this.options.itemsPerPage,
             ...this.queryParams,

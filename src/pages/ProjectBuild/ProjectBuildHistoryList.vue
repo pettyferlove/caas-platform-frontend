@@ -199,6 +199,8 @@ export default {
       return new Promise((resolve, reject) => {
         api.projectBuild
           .history(this.id, {
+            descs: this.sortDesc(this.options),
+            ascs: this.sortAsc(this.options),
             current: this.options.page,
             size: this.options.itemsPerPage,
             ...this.queryParams,

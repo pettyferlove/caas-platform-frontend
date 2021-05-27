@@ -276,14 +276,25 @@ export default {
           width: 200,
           value: "name",
         },
-        { text: "运行状态", align: "center", value: "runStatus" },
+        {
+          text: "运行状态",
+          sortable: false,
+          align: "center",
+          value: "runStatus",
+        },
         {
           text: "环境",
           align: "center",
+          sortable: false,
           value: "envType",
         },
-        { text: "容器组状态", align: "center", value: "groupStatus" },
-        { text: "镜像信息", value: "imagesName" },
+        {
+          text: "容器组状态",
+          sortable: false,
+          align: "center",
+          value: "groupStatus",
+        },
+        { text: "镜像信息", sortable: false, value: "imagesName" },
         { text: "创建时间", align: "center", value: "createTime" },
         { text: "更新时间", align: "center", value: "modifyTime" },
         {
@@ -345,6 +356,8 @@ export default {
         if (this.currentNamespace.id) {
           api.applicationDeployment
             .page(this.currentNamespace.id, {
+              descs: this.sortDesc(this.options),
+              ascs: this.sortAsc(this.options),
               currentPage: this.options.page,
               pageSize: this.options.itemsPerPage,
               ...this.queryParams,

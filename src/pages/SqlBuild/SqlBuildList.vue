@@ -248,6 +248,7 @@ export default {
         {
           text: "环境",
           align: "center",
+          sortable: false,
           value: "envType",
         },
         { text: "创建时间", value: "createTime" },
@@ -325,6 +326,8 @@ export default {
       return new Promise((resolve, reject) => {
         api.sqlBuild
           .page({
+            descs: this.sortDesc(this.options),
+            ascs: this.sortAsc(this.options),
             current: this.options.page,
             size: this.options.itemsPerPage,
             ...this.queryParams,

@@ -181,20 +181,33 @@ export default {
         {
           text: "环境",
           align: "center",
+          sortable: false,
           value: "envType",
           width: 60,
         },
-        { text: "匹配标签", align: "center", value: "matchLabel" },
+        {
+          text: "匹配标签",
+          sortable: false,
+          align: "center",
+          value: "matchLabel",
+        },
         { text: "网络类型", value: "networkType", align: "center", width: 60 },
-        { text: "集群IP", value: "clusterIp", align: "center" },
+        {
+          text: "集群IP",
+          sortable: false,
+          value: "clusterIp",
+          align: "center",
+        },
         {
           text: "内部端点",
+          sortable: false,
           value: "internalEndpoints",
           align: "center",
           width: 300,
         },
         {
           text: "外部端点",
+          sortable: false,
           value: "externalEndpoints",
           align: "center",
           width: 150,
@@ -258,6 +271,8 @@ export default {
         if (this.currentNamespace.id) {
           api.serviceDiscovery
             .page(this.currentNamespace.id, {
+              descs: this.sortDesc(this.options),
+              ascs: this.sortAsc(this.options),
               currentPage: this.options.page,
               pageSize: this.options.itemsPerPage,
               ...this.queryParams,

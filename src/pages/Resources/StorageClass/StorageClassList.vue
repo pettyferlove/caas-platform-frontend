@@ -61,12 +61,28 @@ export default {
       headers: [
         {
           text: "名称",
+          sortable: false,
           align: "start",
           value: "name",
         },
-        { text: "提供者", align: "center", value: "provisioner" },
-        { text: "回收策略", align: "center", value: "reclaimPolicy" },
-        { text: "创建时间", align: "end", value: "creationTimestamp" },
+        {
+          text: "提供者",
+          sortable: false,
+          align: "center",
+          value: "provisioner",
+        },
+        {
+          text: "回收策略",
+          sortable: false,
+          align: "center",
+          value: "reclaimPolicy",
+        },
+        {
+          text: "创建时间",
+          sortable: false,
+          align: "end",
+          value: "creationTimestamp",
+        },
       ],
       datasets: [],
     };
@@ -116,6 +132,8 @@ export default {
       return new Promise((resolve, reject) => {
         api.storageClass
           .page({
+            descs: this.sortDesc(this.options),
+            ascs: this.sortAsc(this.options),
             currentPage: this.options.page,
             pageSize: this.options.itemsPerPage,
             ...this.queryParams,

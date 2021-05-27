@@ -127,7 +127,7 @@ export default {
           align: "start",
           value: "name",
         },
-        { text: "环境", align: "center", value: "envType" },
+        { text: "环境", sortable: false, align: "center", value: "envType" },
         { text: "开启Istio注入", value: "istio" },
         { text: "创建时间", value: "createTime" },
         {
@@ -186,6 +186,8 @@ export default {
       return new Promise((resolve, reject) => {
         api.namespace
           .page({
+            descs: this.sortDesc(this.options),
+            ascs: this.sortAsc(this.options),
             currentPage: this.options.page,
             pageSize: this.options.itemsPerPage,
             ...this.queryParams,

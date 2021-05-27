@@ -31,5 +31,28 @@ export default {
       });
       return intersection.length > 0;
     };
+    Vue.prototype.sortDesc = function (options) {
+      let desc = [];
+      const { sortBy, sortDesc } = options;
+      sortBy.forEach((item, index) => {
+        if (sortDesc[index]) {
+          desc.push(item.replace(/([A-Z])/g, "_$1").toLowerCase());
+        }
+      });
+      if (desc.length === 0) {
+        desc.push("create_time");
+      }
+      return desc.join(",");
+    };
+    Vue.prototype.sortAsc = function (options) {
+      let asc = [];
+      const { sortBy, sortDesc } = options;
+      sortBy.forEach((item, index) => {
+        if (!sortDesc[index]) {
+          asc.push(item.replace(/([A-Z])/g, "_$1").toLowerCase());
+        }
+      });
+      return asc.join(",");
+    };
   },
 };
