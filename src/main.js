@@ -7,6 +7,7 @@ import router from "./router";
 import store from "./vuex/store";
 import vuetify from "./plugins/vuetify";
 import VueExtends from "./libs/extends";
+import VueClipboard from "vue-clipboard2";
 import "./plugins/chartist";
 import Notify from "@/components/notification";
 import velocity from "velocity-animate";
@@ -17,6 +18,7 @@ import("es6-shim");
 
 Vue.use(Notify, { velocity });
 Vue.use(VueExtends);
+Vue.use(VueClipboard);
 
 Vue.config.productionTip = false;
 

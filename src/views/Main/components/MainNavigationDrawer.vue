@@ -32,13 +32,7 @@
     </v-list>
     <v-divider />
     <v-list class="mb-n2" nav>
-      <v-list-group
-        group="user"
-        color="white"
-        no-action
-        eager
-        append-icon="mdi-menu-down"
-      >
+      <v-list-group color="white" no-action eager append-icon="mdi-menu-down">
         <template v-slot:activator>
           <v-list-item-avatar class="align-self-center" color="grey">
             <v-img :src="user.avatar || require('./@assets/avatar/1.jpg')" />

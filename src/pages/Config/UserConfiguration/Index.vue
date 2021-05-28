@@ -38,16 +38,50 @@
             <v-textarea
               counter
               auto-grow
-              label="RSA私钥"
+              label="RSA公钥"
               disabled
-              v-model="formData.privateKey"
+              v-model="formData.publicKeyShow"
             ></v-textarea>
-            <v-alert icon="mdi-shield-lock-outline" prominent text type="info">
-              Gitlab拉取代码需要RSA密钥，首次修改个人设置将自动为您生成RSA密钥，后续您可通过刷新按钮更新密钥并应用至Gitlab
-            </v-alert>
 
             <v-card-actions>
               <v-spacer></v-spacer>
+
+              <v-btn
+                v-clipboard:copy="formData.publicKey"
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError"
+                large
+                color="primary"
+                class="mr-4"
+              >
+                <v-icon> mdi-refresh </v-icon>
+                复制到剪贴板
+              </v-btn>
+            </v-card-actions>
+
+            <v-textarea
+              counter
+              auto-grow
+              label="RSA私钥"
+              disabled
+              v-model="formData.privateKeyShow"
+            ></v-textarea>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                v-clipboard:copy="formData.privateKey"
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError"
+                large
+                color="primary"
+                class="mr-4"
+              >
+                <v-icon> mdi-refresh </v-icon>
+                复制到剪贴板
+              </v-btn>
+
               <v-btn
                 @click="refresh"
                 :loading="refreshing"
@@ -99,6 +133,14 @@
         </v-skeleton-loader>
       </material-card>
     </v-col>
+    <v-snackbar color="primary" top v-model="showTips" :timeout="2000">
+      {{ tips }}
+      <template v-slot:action="{ attrs }">
+        <v-btn icon v-bind="attrs" @click="showTips = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-row>
 </template>
 
@@ -111,6 +153,8 @@ export default {
   components: { MaterialCard },
   data() {
     return {
+      showTips: false,
+      tips: "",
       formData: {},
       types: {
         form:
@@ -133,9 +177,15 @@ export default {
         api.userConfiguration
           .get()
           .then((res) => {
+            if (res.data && res.data.publicKey) {
+              if (res.data.publicKey.length > 200) {
+                res.data.publicKeyShow =
+                  res.data.publicKey.substring(0, 200) + "...";
+              }
+            }
             if (res.data && res.data.privateKey) {
               if (res.data.privateKey.length > 200) {
-                res.data.privateKey =
+                res.data.privateKeyShow =
                   res.data.privateKey.substring(0, 200) + "...";
               }
             }
@@ -221,6 +271,11 @@ export default {
           });
       }
     },
+    copySuccess() {
+      this.showTips = true;
+      this.tips = "已复制到剪贴板";
+    },
+    copyError() {},
   },
 };
 </script>
