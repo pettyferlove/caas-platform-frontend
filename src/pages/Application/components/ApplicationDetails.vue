@@ -39,7 +39,14 @@
               <v-btn :loading="submitting" color="primary" @click="nextStep(1)">
                 下一步
               </v-btn>
-              <v-btn disabled color="primary"> 上一步 </v-btn>
+              <v-btn
+                :loading="updating"
+                v-if="operaType === 'edit'"
+                @click="update(1)"
+                color="warning"
+              >
+                立即更新
+              </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
 
@@ -59,6 +66,14 @@
                 下一步
               </v-btn>
               <v-btn color="primary" @click="step = 1"> 上一步 </v-btn>
+              <v-btn
+                :loading="updating"
+                v-if="operaType === 'edit'"
+                @click="update(2)"
+                color="warning"
+              >
+                立即更新
+              </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
 
@@ -77,6 +92,14 @@
                 下一步
               </v-btn>
               <v-btn color="primary" @click="step = 2"> 上一步 </v-btn>
+              <v-btn
+                :loading="updating"
+                v-if="operaType === 'edit'"
+                @click="update(3)"
+                color="warning"
+              >
+                立即更新
+              </v-btn>
               <v-btn text @click="back"> 返回 </v-btn>
             </v-stepper-content>
 
@@ -132,6 +155,7 @@ export default {
       step: 1,
       initLoading: false,
       submitting: false,
+      updating: false,
       defaultData: {
         environmentVariable: [{}],
         mounts: [{}],
@@ -166,8 +190,7 @@ export default {
       },
       formData: {},
       types: {
-        form:
-          "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
+        form: "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
       },
     };
   },
@@ -372,6 +395,58 @@ export default {
           that.submitting = false;
         }
       }
+    },
+    update(value) {
+      let that = this;
+      that.updating = true;
+      if (value === 1) {
+        if (!that.$refs.info.validate()) {
+          that.updating = false;
+          return;
+        }
+      }
+      if (value === 2) {
+        if (!that.$refs.advanced.validate()) {
+          that.updating = false;
+          return;
+        }
+      }
+      if (value === 3) {
+        if (!that.$refs.probe.validate()) {
+          that.updating = false;
+          return;
+        }
+      }
+      if (value === 4) {
+        if (!that.$refs.network.validate()) {
+          that.updating = false;
+          return;
+        }
+      }
+
+      let data = this.processData(utils.deepClone(that.formData));
+      api.applicationDeployment
+        .update(that.currentNamespace.id, data)
+        .then(() => {
+          that.$notify({
+            group: "default",
+            type: "success",
+            title: "更新成功",
+          });
+          that.$router.push({
+            name: "ApplicationList",
+          });
+        })
+        .catch(() => {
+          that.$notify({
+            group: "default",
+            type: "error",
+            title: "更新失败",
+          });
+        })
+        .finally(() => {
+          that.updating = false;
+        });
     },
   },
 };

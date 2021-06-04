@@ -14,6 +14,7 @@ import { userConfiguration } from "./interface/core/user-configuration";
 import { namespace } from "./interface/core/namespace";
 import { pod } from "./interface/core/pod";
 import { persistentStorage } from "./interface/core/persistent-storage";
+import { keyword } from "./interface/core/keyword";
 
 /*Engine*/
 import { deployment } from "./interface/engine/kubernetes/deployment";
@@ -42,6 +43,7 @@ export default {
   node,
   storageClass,
   pod,
+  keyword,
   daemonSet,
   ingress,
   secret,

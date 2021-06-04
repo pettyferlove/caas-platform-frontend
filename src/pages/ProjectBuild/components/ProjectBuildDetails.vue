@@ -41,6 +41,14 @@
               required
             ></v-textarea>
 
+            <div class="text-left">
+              <dynamic-keyword
+                :bus-id="id"
+                bus-type="project_build"
+                @change="changeKeyword"
+              ></dynamic-keyword>
+            </div>
+
             <v-switch
               v-model="formData.linkProject"
               label="需要关联其他项目？"
@@ -413,10 +421,12 @@ import EnvironmentType from "@components/base/EnvironmentType";
 import ShellEditor from "@components/editer/ShellEditor";
 import Document from "@/pages/components/Document";
 import ConfigEditor from "@components/editer/ConfigEditor";
+import DynamicKeyword from "@components/keyword/DynamicKeyword";
 
 export default {
   name: "ProjectBuildDetails",
   components: {
+    DynamicKeyword,
     ConfigEditor,
     Document,
     ShellEditor,
@@ -458,8 +468,7 @@ export default {
         },
       ],
       types: {
-        form:
-          "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
+        form: "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
       },
       projectsLoading: true,
       submitting: false,
@@ -560,6 +569,11 @@ export default {
       if (this.id.length !== 0) {
         this.loadDetail();
       }
+    },
+    currentNamespace() {
+      this.$router.push({
+        name: "ProjectBuildList",
+      });
     },
     searchProjects(value) {
       if (this.formData.depositoryType === `gitlab_v4`) {
@@ -757,6 +771,9 @@ export default {
           this.projectBranchesLoading = false;
         });
     },
+    changeKeyword(keywords) {
+      this.$set(this.formData, "keywords", keywords.join(","));
+    },
     changeTriggerMethod(value) {
       if (value === "branch") {
         this.loadProjectBranches(this.formData.projectId);
@@ -812,4 +829,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="sass"></style>

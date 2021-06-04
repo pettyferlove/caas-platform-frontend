@@ -15,7 +15,7 @@
         >
           <div>
             <v-row class="text-start pt-2">
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
                 <v-text-field
                   dense
                   v-model="queryParams.projectName"
@@ -23,7 +23,7 @@
                   outlined
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
                 <v-text-field
                   dense
                   v-model="queryParams.projectDescribe"
@@ -31,7 +31,7 @@
                   outlined
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
                 <EnvironmentType
                   label="请选择环境类型"
                   hide-icon
@@ -40,9 +40,26 @@
                   v-model="queryParams.envType"
                 ></EnvironmentType>
               </v-col>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
+                <v-select
+                  class="v-data-table-query-params"
+                  :items="keywords"
+                  v-model="queryParams.keywords"
+                  label="关键词"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  chips
+                  dense
+                  multiple
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="2">
                 <v-btn @click="handlerSearch" rounded color="primary"
                   ><v-icon dark>mdi-magnify</v-icon></v-btn
+                >
+                <v-btn @click="handlerRestart" rounded color="grey"
+                  ><v-icon dark>mdi-restart</v-icon></v-btn
                 >
               </v-col>
             </v-row>
@@ -67,7 +84,20 @@
               <template v-slot:item.lastState="{ item }">
                 <BuildStatus :state="item.lastState"></BuildStatus>
               </template>
-
+              <template v-slot:item.keywords="{ item }">
+                <template v-if="item.keywords">
+                  <v-chip
+                    label
+                    outlined
+                    v-for="(i, index) in JSON.parse(item.keywords)"
+                    v-bind:key="`keyword-` + index"
+                    style="margin: 2px"
+                    :color="i.color"
+                  >
+                    <v-icon left> mdi-label </v-icon> {{ i.name }}
+                  </v-chip>
+                </template>
+              </template>
               <template v-slot:item.projectName="{ item }">
                 <span>
                   <v-chip
@@ -114,9 +144,6 @@
                   @change="changeAutoBuildStatus(item)"
                 ></v-switch>
               </template>
-              <template v-slot:item.createTime="{ item }">
-                {{ formatDate(item.createTime) }}
-              </template>
               <template v-slot:item.actions="{ item }">
                 <v-menu fixed :rounded="true" offset-y left>
                   <template v-slot:activator="{ on: menu, attrs }">
@@ -154,64 +181,95 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
-                <v-tooltip bottom>
+                <v-menu
+                  transition="slide-y-transition"
+                  rounded="lg"
+                  bottom
+                  left
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="cyan"
-                      @click="handlerHistory(item)"
-                    >
-                      <v-icon small>mdi-history</v-icon>
+                    <v-btn color="grey" icon v-bind="attrs" v-on="on">
+                      <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
-                  <span>查看构建历史</span>
-                </v-tooltip>
+                  <v-list>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerHistory(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-history</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>构建历史</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>查看构建历史记录</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="cyan"
-                      @click="handlerBuild(item)"
-                    >
-                      <v-icon small>mdi-wrench-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>立即构建</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="cyan"
-                      @click="handlerModify(item)"
-                    >
-                      <v-icon small>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>修改构建设置</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerBuild(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-wrench-outline</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>立即构建</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>立即构建</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="pink"
-                      @click="handlerDelete(item)"
-                    >
-                      <v-icon small>mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>删除构建设置</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerModify(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>修改设置</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>修改构建设置</span>
+                    </v-tooltip>
+
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerDelete(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-delete</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>删除设置</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>删除构建设置</span>
+                    </v-tooltip>
+                  </v-list>
+                </v-menu>
               </template>
             </v-data-table>
           </div>
@@ -274,16 +332,27 @@ export default {
           value: "projectName",
         },
         {
+          text: "最后一次构建状态",
+          align: "start",
+          sortable: false,
+          value: "lastState",
+        },
+        {
+          text: "构建分支",
+          align: "center",
+          value: "remoteBranch",
+        },
+        {
           text: "说明",
           align: "start",
           sortable: false,
           value: "projectDescribe",
         },
         {
-          text: "最后一次构建状态",
-          align: "start",
+          text: "关键词",
+          align: "center",
           sortable: false,
-          value: "lastState",
+          value: "keywords",
         },
         {
           text: "最后一次构建时间",
@@ -303,16 +372,16 @@ export default {
           sortable: false,
           width: 120,
         },
-        { text: "创建时间", value: "createTime" },
         {
           text: "操作",
           value: "actions",
           sortable: false,
           align: "end",
-          width: 220,
+          width: 120,
         },
       ],
       datasets: [],
+      keywords: [],
       history: [{}],
     };
   },
@@ -338,6 +407,7 @@ export default {
   mounted() {
     this.initLoading = true;
     this.loadData().finally(() => {
+      this.loadAllSelectedKeyword();
       this.initLoading = false;
     });
     if (!this.loadTimer) {
@@ -365,6 +435,10 @@ export default {
         this.loading = false;
       });
     },
+    handlerRestart() {
+      this.queryParams = {};
+      this.handlerSearch();
+    },
     startLoadTimer() {
       let that = this;
       that.loadTimer = setInterval(that.loadData, 5000);
@@ -376,6 +450,19 @@ export default {
       clearInterval(this.loadTimer);
       this.loadTimer = null;
     },
+    loadAllSelectedKeyword() {
+      return new Promise((resolve, reject) => {
+        api.keyword
+          .allSelected()
+          .then((res) => {
+            this.keywords = res.data;
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
     loadData() {
       return new Promise((resolve, reject) => {
         api.projectBuild
@@ -385,6 +472,9 @@ export default {
             current: this.options.page,
             size: this.options.itemsPerPage,
             ...this.queryParams,
+            keywords: this.queryParams.keywords
+              ? this.queryParams.keywords.join(",")
+              : "",
             namespaceId: this.currentNamespace.id,
           })
           .then((res) => {

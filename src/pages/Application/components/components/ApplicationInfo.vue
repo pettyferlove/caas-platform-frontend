@@ -42,9 +42,15 @@
       v-model="formData.descriptionContent"
       name="input-7-1"
       label="描述"
-      hint="Hint text"
-      prepend-icon="mdi-sort-alphabetical-descending-variant"
     ></v-textarea>
+
+    <div class="text-left">
+      <dynamic-keyword
+        :bus-id="formData.id"
+        bus-type="application_deployment"
+        @change="changeKeyword"
+      ></dynamic-keyword>
+    </div>
 
     <v-row>
       <v-col cols="12" md="4">
@@ -102,9 +108,10 @@
 import EnvironmentType from "@components/base/EnvironmentType";
 import api from "@/api";
 import { mapGetters } from "vuex";
+import DynamicKeyword from "@components/keyword/DynamicKeyword";
 export default {
   name: "ApplicationInfo",
-  components: { EnvironmentType },
+  components: {DynamicKeyword, EnvironmentType },
   props: {
     value: [Object],
     operaType: {
@@ -200,6 +207,9 @@ export default {
         .finally(() => {
           this.tagsLoading = false;
         });
+    },
+    changeKeyword(keywords) {
+      this.$set(this.formData, "keywords", keywords.join(","));
     },
     changeProjectBuild(value) {
       this.$set(this.formData, "imagesDepositoryId", "");

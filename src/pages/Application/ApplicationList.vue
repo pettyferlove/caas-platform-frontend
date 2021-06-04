@@ -15,7 +15,7 @@
         >
           <div>
             <v-row class="text-start pt-2">
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
                 <v-text-field
                   dense
                   v-model="queryParams.name"
@@ -23,7 +23,7 @@
                   outlined
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
                 <EnvironmentType
                   label="请选择环境类型"
                   hide-icon
@@ -32,9 +32,26 @@
                   v-model="queryParams.envType"
                 ></EnvironmentType>
               </v-col>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6" md="2">
+                <v-select
+                  class="v-data-table-query-params"
+                  :items="keywords"
+                  v-model="queryParams.keywords"
+                  label="关键词"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  chips
+                  dense
+                  multiple
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="2">
                 <v-btn @click="handlerSearch" rounded color="primary"
                   ><v-icon dark>mdi-magnify</v-icon></v-btn
+                >
+                <v-btn @click="handlerRestart" rounded color="grey"
+                  ><v-icon dark>mdi-restart</v-icon></v-btn
                 >
               </v-col>
             </v-row>
@@ -63,6 +80,20 @@
                   type="label"
                 ></EnvironmentType>
               </template>
+              <template v-slot:item.keywords="{ item }">
+                <template v-if="item.keywords">
+                  <v-chip
+                    label
+                    outlined
+                    v-for="(i, index) in JSON.parse(item.keywords)"
+                    v-bind:key="`keyword-` + index"
+                    style="margin: 2px"
+                    :color="i.color"
+                  >
+                    <v-icon left> mdi-label </v-icon> {{ i.name }}
+                  </v-chip>
+                </template>
+              </template>
 
               <template v-slot:item.imagesName="{ item }">
                 {{ item.imageName + ":" + item.imageTag }}
@@ -72,101 +103,133 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="green"
-                      @click="handlerView(item)"
-                    >
-                      <v-icon small>mdi-eye</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>查看运行详情</span>
-                </v-tooltip>
-
-                <v-tooltip
+                <v-menu
+                  transition="slide-y-transition"
+                  rounded="lg"
                   bottom
-                  v-if="
-                    item.runStatus === `stopping` ||
-                    item.runStatus === `stopped`
-                  "
+                  left
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="green"
-                      @click="handlerStart(item)"
-                    >
-                      <v-icon small>mdi-arrow-right-drop-circle-outline</v-icon>
+                    <v-btn color="grey" icon v-bind="attrs" v-on="on">
+                      <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
-                  <span>启动应用</span>
-                </v-tooltip>
+                  <v-list>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerView(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-eye</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>查看详情</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>查看运行详情</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom v-else>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="red"
-                      @click="handlerShutdown(item)"
-                    >
-                      <v-icon small>mdi-power</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>关闭应用</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerStart(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>启动应用</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>启动应用</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="green"
-                      @click="handlerScale(item)"
-                    >
-                      <v-icon small>mdi-scale</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>应用缩放</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerShutdown(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-power</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>关闭应用</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>关闭应用</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="cyan"
-                      @click="handlerModify(item)"
-                    >
-                      <v-icon small>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>编辑应用</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerScale(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-scale</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>应用缩放</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>应用缩放</span>
+                    </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      icon
-                      color="pink"
-                      @click="handlerDelete(item)"
-                    >
-                      <v-icon small>mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>删除应用</span>
-                </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerModify(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>编辑应用</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>编辑应用</span>
+                    </v-tooltip>
+
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-list-item
+                          @click="handlerDelete(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          link
+                        >
+                          <v-list-item-action style="margin-right: 2px">
+                            <v-icon>mdi-delete</v-icon>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                            <v-list-item-title>删除应用</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                      <span>删除应用</span>
+                    </v-tooltip>
+                  </v-list>
+                </v-menu>
               </template>
             </v-data-table>
           </div>
@@ -273,7 +336,6 @@ export default {
         {
           text: "名称",
           align: "start",
-          width: 200,
           value: "name",
         },
         {
@@ -289,12 +351,17 @@ export default {
           value: "envType",
         },
         {
+          text: "关键词",
+          align: "center",
+          sortable: false,
+          value: "keywords",
+        },
+        {
           text: "容器组状态",
           sortable: false,
           align: "center",
           value: "groupStatus",
         },
-        { text: "镜像信息", sortable: false, value: "imagesName" },
         { text: "创建时间", align: "center", value: "createTime" },
         { text: "更新时间", align: "center", value: "modifyTime" },
         {
@@ -302,10 +369,11 @@ export default {
           value: "actions",
           sortable: false,
           align: "end",
-          width: 220,
+          width: 60,
         },
       ],
       datasets: [],
+      keywords: [],
     };
   },
   watch: {
@@ -327,6 +395,7 @@ export default {
   mounted() {
     this.initLoading = true;
     this.loadData().finally(() => {
+      this.loadAllSelectedKeyword();
       this.initLoading = false;
     });
     if (!this.loadTimer) {
@@ -373,6 +442,19 @@ export default {
         } else {
           resolve();
         }
+      });
+    },
+    loadAllSelectedKeyword() {
+      return new Promise((resolve, reject) => {
+        api.keyword
+          .allSelected()
+          .then((res) => {
+            this.keywords = res.data;
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
     handlerShutdown(item) {
@@ -427,6 +509,10 @@ export default {
       this.loadData().finally(() => {
         this.loading = false;
       });
+    },
+    handlerRestart() {
+      this.queryParams = {};
+      this.handlerSearch();
     },
     handlerAdd() {
       this.$router.push({
