@@ -9,7 +9,7 @@
     />
     <v-spacer />
 
-<!--    <v-text-field
+    <!--    <v-text-field
       :label="$t('search')"
       color="secondary"
       hide-details

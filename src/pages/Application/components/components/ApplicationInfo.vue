@@ -111,7 +111,7 @@ import { mapGetters } from "vuex";
 import DynamicKeyword from "@components/keyword/DynamicKeyword";
 export default {
   name: "ApplicationInfo",
-  components: {DynamicKeyword, EnvironmentType },
+  components: { DynamicKeyword, EnvironmentType },
   props: {
     value: [Object],
     operaType: {

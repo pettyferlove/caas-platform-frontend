@@ -28,11 +28,7 @@
       <template v-slot:no-data>
         <v-list-item>
           <span class="subheading">Create</span>
-          <v-chip
-            :color="`${colors[nonce - 1]} lighten-3`"
-            label
-            small
-          >
+          <v-chip :color="`${colors[nonce - 1]} lighten-3`" label small>
             {{ search }}
           </v-chip>
         </v-list-item>
@@ -49,12 +45,7 @@
           <span class="pr-2">
             {{ item.text }}
           </span>
-          <v-icon
-            small
-            @click="parent.selectItem(item)"
-          >
-            close
-          </v-icon>
+          <v-icon small @click="parent.selectItem(item)"> close </v-icon>
         </v-chip>
       </template>
       <template v-slot:item="{ index, item }">
@@ -68,22 +59,13 @@
           solo
           @keyup.enter="edit(index, item)"
         ></v-text-field>
-        <v-chip
-          v-else
-          :color="`${item.color} lighten-3`"
-          dark
-          label
-          small
-        >
+        <v-chip v-else :color="`${item.color} lighten-3`" dark label small>
           {{ item.text }}
         </v-chip>
         <v-spacer></v-spacer>
         <v-list-item-action @click.stop>
-          <v-btn
-            icon
-            @click.stop.prevent="edit(index, item)"
-          >
-            <v-icon>{{ editing !== item ? 'mdi-pencil' : 'mdi-check' }}</v-icon>
+          <v-btn icon @click.stop.prevent="edit(index, item)">
+            <v-icon>{{ editing !== item ? "mdi-pencil" : "mdi-check" }}</v-icon>
           </v-btn>
         </v-list-item-action>
       </template>
@@ -116,7 +98,7 @@
         </v-list-item>
       </template>
     </v-combobox>
-<!--    <v-text-field
+    <!--    <v-text-field
       class="input-new-tag"
       style="margin: 6px 8px 8px 8px"
       dense
@@ -196,17 +178,16 @@ export default {
     handleInputConfirm(e) {
       let inputValue = this.inputValue;
       if (inputValue) {
-        console.log("创建一个新的标签----" + inputValue);
+        console.log(e);
         this.dynamicTags.push(inputValue);
       }
       this.inputVisible = false;
       this.inputValue = "";
     },
     hash(input) {
-      let I64BIT_TABLE =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".split(
-          ""
-        );
+      let I64BIT_TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".split(
+        ""
+      );
       let hash = 5381;
       let i = input.length - 1;
       if (typeof input == "string") {
