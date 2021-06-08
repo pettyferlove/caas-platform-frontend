@@ -71,6 +71,7 @@
             </v-row>
             <v-divider></v-divider>
             <ConfigEditor
+              class="md-body"
               :type="formData.configType"
               v-model="formData.content"
             ></ConfigEditor>
@@ -242,4 +243,7 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="sass">
+.md-body
+  height: 740px
+</style>

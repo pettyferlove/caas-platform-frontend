@@ -149,7 +149,7 @@ export default {
       loadTimer: null,
       options: {
         page: 1,
-        itemsPerPage: 5,
+        itemsPerPage: 10,
         sortBy: [],
         sortDesc: [],
         groupBy: [],

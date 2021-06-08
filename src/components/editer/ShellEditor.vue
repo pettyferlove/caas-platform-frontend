@@ -1,5 +1,5 @@
 <template>
-  <div class="editor">
+  <div class="shell">
     <textarea ref="textarea" />
   </div>
 </template>
@@ -54,22 +54,22 @@ export default {
 </script>
 
 <style scoped>
-.editor {
+.shell {
   height: 100%;
   width: 100%;
   position: relative;
 }
 
-.editor >>> .CodeMirror {
+.shell >>> .CodeMirror {
   height: auto;
   min-height: 500px;
 }
 
-.editor >>> .CodeMirror-scroll {
+.shell >>> .CodeMirror-scroll {
   min-height: 500px;
 }
 
-.editor >>> .cm-s-rubyblue span.cm-string {
+.shell >>> .cm-s-rubyblue span.cm-string {
   color: #f08047;
 }
 </style>

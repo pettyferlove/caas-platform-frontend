@@ -73,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .editor {
   height: 100%;
   width: 100%;
@@ -82,8 +82,6 @@ export default {
 
 .editor >>> .CodeMirror {
   height: 700px;
-  overflow: auto;
-  min-height: 700px;
 }
 
 .editor >>> .CodeMirror-scroll {

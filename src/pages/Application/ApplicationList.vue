@@ -134,7 +134,13 @@
                       <span>查看运行详情</span>
                     </v-tooltip>
 
-                    <v-tooltip left>
+                    <v-tooltip
+                      v-if="
+                        item.runStatus === `stopping` ||
+                        item.runStatus === `stopped`
+                      "
+                      left
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-list-item
                           @click="handlerStart(item)"
@@ -153,7 +159,7 @@
                       <span>启动应用</span>
                     </v-tooltip>
 
-                    <v-tooltip left>
+                    <v-tooltip v-else left>
                       <template v-slot:activator="{ on, attrs }">
                         <v-list-item
                           @click="handlerShutdown(item)"

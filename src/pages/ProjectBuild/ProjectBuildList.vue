@@ -145,14 +145,19 @@
                 ></v-switch>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-menu fixed :rounded="true" offset-y left>
+                <v-menu
+                  transition="slide-y-transition"
+                  rounded="lg"
+                  bottom
+                  left
+                >
                   <template v-slot:activator="{ on: menu, attrs }">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on: tooltip }">
                         <v-btn
                           @click="loadHistory(item)"
                           icon
-                          color="cyan"
+                          color="grey"
                           v-bind="attrs"
                           v-on="{ ...tooltip, ...menu }"
                         >

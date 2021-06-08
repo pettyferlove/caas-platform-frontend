@@ -1,4 +1,3 @@
-<script src="../../libs/schema.js"></script>
 <template>
   <v-row>
     <v-col>

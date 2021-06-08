@@ -174,6 +174,7 @@
               label="是否需要构建"
               :true-value="1"
               :false-value="0"
+              @change="changeBuildStatus"
               prepend-icon="mdi-wrench-outline"
             ></v-switch>
 
@@ -468,7 +469,8 @@ export default {
         },
       ],
       types: {
-        form: "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
+        form:
+          "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
       },
       projectsLoading: true,
       submitting: false,
@@ -779,6 +781,12 @@ export default {
         this.loadProjectBranches(this.formData.projectId);
       } else {
         this.$set(this.formData, "remoteBranch", "master");
+      }
+    },
+    changeBuildStatus(value) {
+      if (value === 0) {
+        this.$set(this.formData, "buildTool", null);
+        this.$set(this.formData, "buildCommand", null);
       }
     },
     changeBuildTool(value) {

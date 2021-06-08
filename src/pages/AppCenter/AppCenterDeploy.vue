@@ -140,5 +140,6 @@ export default {
   font-weight: bold
   padding: 28px 18px
 .md-body
-  padding: 20px 20px
+  padding: 20px
+  height: 740px
 </style>
