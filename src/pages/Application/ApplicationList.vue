@@ -433,8 +433,8 @@ export default {
             .page(this.currentNamespace.id, {
               descs: this.sortDesc(this.options),
               ascs: this.sortAsc(this.options),
-              currentPage: this.options.page,
-              pageSize: this.options.itemsPerPage,
+              current: this.options.page,
+              size: this.options.itemsPerPage,
               ...this.queryParams,
             })
             .then((res) => {
