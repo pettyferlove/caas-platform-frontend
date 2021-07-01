@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container>
+    <v-container fluid>
       <router-view></router-view>
     </v-container>
     <main-footer></main-footer>
