@@ -164,7 +164,7 @@
                           <v-icon small>mdi-cloud-download</v-icon>
                         </v-btn>
                       </template>
-                      <span>下载历史构建脚本</span>
+                      <span>下载历史构建产物</span>
                     </v-tooltip>
                   </template>
                   <v-list v-if="history.size !== 0">

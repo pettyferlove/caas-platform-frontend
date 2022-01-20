@@ -3,10 +3,6 @@
     <template v-slot:activator="{ attrs, on }">
       <v-btn class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
         <v-badge v-if="messageCount > 0" color="red" overlap bordered>
-          <template v-slot:badge>
-            <span>{{ messageCount }}</span>
-          </template>
-
           <v-icon>mdi-bell</v-icon>
         </v-badge>
         <v-icon v-else>mdi-bell</v-icon>
