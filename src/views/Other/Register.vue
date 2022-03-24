@@ -122,8 +122,7 @@ export default {
         icon: "mdi-account-multiple",
         iconColor: "cyan",
         title: "Built Audience",
-        text:
-          "There is also a Fully Customizable CMS Admin Dashboard for this product.",
+        text: "There is also a Fully Customizable CMS Admin Dashboard for this product.",
       },
     ],
     socials: [

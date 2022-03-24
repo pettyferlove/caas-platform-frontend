@@ -45,8 +45,7 @@ const appCenter = [
           require(["@/pages/AppCenter/AppCenterDeploy"], resolve),
       },
       {
-        path:
-          "release-upgrade/:namespace/:name/:chartName/:version/:appVersion",
+        path: "release-upgrade/:namespace/:name/:chartName/:version/:appVersion",
         name: "ReleaseUpgrade",
         meta: {
           title: "应用中心",

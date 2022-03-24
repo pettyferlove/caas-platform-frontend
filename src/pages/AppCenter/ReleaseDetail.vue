@@ -479,8 +479,7 @@ export default {
       },
       initLoading: false,
       types: {
-        form:
-          "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
+        form: "list-item, card-heading, divider, date-picker-options, date-picker-days, actions, text@4",
       },
       rawYaml: "",
     };

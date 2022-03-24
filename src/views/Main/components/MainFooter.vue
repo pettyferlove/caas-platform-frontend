@@ -39,13 +39,11 @@ export default {
         text: "Alex Pettyfer",
       },
       {
-        href:
-          "http://gitlab.ggjs.sinobest.cn/shebao/rsydsj/COMMGroup/AotomatedDeployment/caas-platform-frontend",
+        href: "http://gitlab.ggjs.sinobest.cn/shebao/rsydsj/COMMGroup/AotomatedDeployment/caas-platform-frontend",
         text: "GitLab",
       },
       {
-        href:
-          "http://gitlab.ggjs.sinobest.cn/shebao/rsydsj/COMMGroup/AotomatedDeployment/caas-platform-frontend/issues",
+        href: "http://gitlab.ggjs.sinobest.cn/shebao/rsydsj/COMMGroup/AotomatedDeployment/caas-platform-frontend/issues",
         text: "Issues",
       },
     ],

@@ -6,7 +6,10 @@ const directions = {
 /**
  * Sequential ID generator
  */
-export const Id = ((i) => () => i++)(0);
+export const Id = (
+  (i) => () =>
+    i++
+)(0);
 
 /**
  * Splits space/tab separated string into array and cleans empty string items.

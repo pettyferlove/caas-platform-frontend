@@ -185,9 +185,10 @@ export default {
       this.inputValue = "";
     },
     hash(input) {
-      let I64BIT_TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".split(
-        ""
-      );
+      let I64BIT_TABLE =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".split(
+          ""
+        );
       let hash = 5381;
       let i = input.length - 1;
       if (typeof input == "string") {

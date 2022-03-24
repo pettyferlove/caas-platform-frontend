@@ -18,8 +18,8 @@ const validate = {
 
   email: function (rule, value, callback) {
     //邮箱只校验规则，不校验必填
-    // eslint-disable-next-line no-useless-escape
-    let emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+    // eslint-disable-next-line
+    let emailReg = /^([a-zA-Z0-9]+[_]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
     if (value && value.length > 0) {
       if (!emailReg.test(value)) {
         return callback(new Error("不是有效的email地址！"));
